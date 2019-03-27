@@ -8,9 +8,26 @@
     android:orientation="vertical"
     android:gravity="bottom">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/ic_default_user_profile"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FF000000" />
+
     <TextView
+        android:id="@+id/profile_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:text="@string/user_name_default"
+        android:textColor="@color/profileText"/>
 
+    <TextView
+        android:id="@+id/profile_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/user_email_default"
+        android:textColor="@color/profileText"/>
 </LinearLayout>
