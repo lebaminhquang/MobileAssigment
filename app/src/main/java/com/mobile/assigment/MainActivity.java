@@ -1,5 +1,6 @@
 package com.mobile.assigment;
 
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,9 +13,19 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.mobile.assigment.view.AboutFragment;
+import com.mobile.assigment.view.BoardsFragment;
+import com.mobile.assigment.view.SettingsFragment;
+
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private FragmentManager mFragmentManager;
+
+    //fragments
+    private BoardsFragment mBoardsFragment;
+    private SettingsFragment mSettingsFragment;
+    private AboutFragment mAboutFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,29 +56,28 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
         //add fragment showing boards as default
-        BoardsFragment boardsFragment = new BoardsFragment();
-        fragmentTransaction.add(R.id.main_frame, boardsFragment);
+        mBoardsFragment = new BoardsFragment();
+        mSettingsFragment = new SettingsFragment();
+        mAboutFragment = new AboutFragment();
+
+        fragmentTransaction.add(R.id.main_frame, mBoardsFragment);
         fragmentTransaction.commit();
     }
 
     public void selectDrawerItem(MenuItem item) {
         Fragment fragment = null;
-        Class fragmentClass = null;
         switch (item.getItemId()) {
             case R.id.nav_boards:
-                fragmentClass = BoardsFragment.class;
+                fragment = mBoardsFragment;
                 break;
             case R.id.nav_settings:
-                fragmentClass = SettingsFragment.class;
+                fragment = mSettingsFragment;
                 break;
             case R.id.nav_about:
-                fragmentClass = AboutFragment.class;
+                fragment = mAboutFragment;
                 break;
         }
-
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
-
             mFragmentManager.beginTransaction().replace(R.id.main_frame, fragment).commit();
             // Highlight the selected item has been done by NavigationView
             item.setChecked(true);
@@ -76,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         // Close the navigation drawer
         mDrawerLayout.closeDrawers();
     }
