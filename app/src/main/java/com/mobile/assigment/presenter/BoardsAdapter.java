@@ -12,8 +12,9 @@ import java.util.ArrayList;
 
 public class BoardsAdapter extends RecyclerView.Adapter<BoardsAdapter.BoardViewHolder> {
     private ArrayList<String> mDataset;
+    private View.OnClickListener mClickListener;
 
-    public static class BoardViewHolder extends RecyclerView.ViewHolder {
+    public class BoardViewHolder extends RecyclerView.ViewHolder{
         public TextView mTextView;
         public BoardViewHolder(View view) {
             super(view);
@@ -25,11 +26,22 @@ public class BoardsAdapter extends RecyclerView.Adapter<BoardsAdapter.BoardViewH
         mDataset = dataset;
     }
 
+    public void setClickListener(View.OnClickListener callback) {
+        mClickListener = callback;
+    }
+
     @Override
     public BoardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.board_recycler_view_item, parent, false);
         BoardViewHolder vh = new BoardViewHolder(v);
+
+        vh.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClickListener.onClick(v);
+            }
+        });
         return vh;
     }
 
@@ -42,5 +54,6 @@ public class BoardsAdapter extends RecyclerView.Adapter<BoardsAdapter.BoardViewH
     public int getItemCount() {
         return mDataset.size();
     }
+
 
 }
