@@ -9,4 +9,5 @@
     <color name="drawerItemUnchecked">#000000</color>
     <color name="defaultTextColor">#000</color>
     <color name="defaultBoardBackground">#2897ff</color>
+    <color name="cardBackGround">#fff</color>
 </resources>

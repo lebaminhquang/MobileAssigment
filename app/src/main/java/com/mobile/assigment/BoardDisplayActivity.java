@@ -22,7 +22,6 @@ public class BoardDisplayActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mListCardRecyclerView;
     private ListCardAdapter mAdapter;
-    private int currentItemPosition = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +49,7 @@ public class BoardDisplayActivity extends AppCompatActivity {
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(mListCardRecyclerView);
         mAdapter = new ListCardAdapter(mListCardNames);
+        mAdapter.setParentActivity(BoardDisplayActivity.this);
         mListCardRecyclerView.setAdapter(mAdapter);
     }
 }
