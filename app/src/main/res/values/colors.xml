@@ -8,4 +8,5 @@
     <color name="drawerItemChecked">#3184e9</color>
     <color name="drawerItemUnchecked">#000000</color>
     <color name="defaultTextColor">#000</color>
+    <color name="defaultBoardBackground">#2897ff</color>
 </resources>

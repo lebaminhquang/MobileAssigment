@@ -54,6 +54,4 @@ public class BoardsAdapter extends RecyclerView.Adapter<BoardsAdapter.BoardViewH
     public int getItemCount() {
         return mDataset.size();
     }
-
-
 }
