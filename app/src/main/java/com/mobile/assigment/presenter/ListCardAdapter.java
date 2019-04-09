@@ -14,6 +14,8 @@ import com.mobile.assigment.R;
 
 import java.util.ArrayList;
 
+import at.markushi.ui.CircleButton;
+
 public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCardViewHolder> {
     private ArrayList<String> mDataset;
     private Activity mParentActivity;
@@ -22,7 +24,7 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
     public class ListCardViewHolder extends RecyclerView.ViewHolder {
         public TextView mListNameTextView;
         public RecyclerView mCardsRecyclerView;
-        public Button mAddCardButton;
+        public CircleButton mAddCardButton;
         public CardsAdapter mAdapter;
         private RecyclerView.LayoutManager mLayoutManager;
 
