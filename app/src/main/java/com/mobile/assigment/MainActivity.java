@@ -1,6 +1,5 @@
 package com.mobile.assigment;
 
-import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.main_drawer_layout);
 
         //setting up action bar
         Toolbar toolbar = findViewById(R.id.toolbar);

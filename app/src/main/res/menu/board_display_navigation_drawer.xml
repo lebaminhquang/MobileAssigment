@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group android:id="@+id/nav_grp1" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_boards_members"
+            android:icon="@drawable/ic_board_member"
+            android:title="Members" />
+        <item
+            android:id="@+id/nav_boards_activity"
+            android:icon="@drawable/ic_board_activity"
+            android:title="Activity" />
+    </group>
+
+    <group android:id="@+id/nav_grp2" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_boards_settings"
+            android:icon="@drawable/ic_board_settings"
+            android:title="Board settings" />
+    </group>
+</menu>

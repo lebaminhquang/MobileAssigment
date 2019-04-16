@@ -19,7 +19,7 @@
 
         <activity android:name=".BoardDisplayActivity"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
