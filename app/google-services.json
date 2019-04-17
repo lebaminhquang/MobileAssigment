@@ -1,38 +1,42 @@
 {
   "project_info": {
-    "project_number": "350478129843",
-    "firebase_url": "https://mobileassigment-64ae5.firebaseio.com",
-    "project_id": "mobileassigment-64ae5",
-    "storage_bucket": "mobileassigment-64ae5.appspot.com"
+    "project_number": "829138065824",
+    "firebase_url": "https://trolle-13d86.firebaseio.com",
+    "project_id": "trolle-13d86",
+    "storage_bucket": "trolle-13d86.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:350478129843:android:9370d78872aad91f",
+        "mobilesdk_app_id": "1:829138065824:android:9370d78872aad91f",
         "android_client_info": {
           "package_name": "com.mobile.assigment"
         }
       },
       "oauth_client": [
         {
-          "client_id": "350478129843-n7sf9sehharaf5j7im7jl06e27a2o4hm.apps.googleusercontent.com",
+          "client_id": "829138065824-058t19afs809rl6sednk6d53cp1ec5em.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.mobile.assigment",
             "certificate_hash": "a423573313ad7c6ac772ade326108ad2bf9f42cf"
           }
+        },
+        {
+          "client_id": "829138065824-dp8j226v2s381ghh85qkbdrru2hnkc2k.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBv0qPwzIW2J4j2eWk63NXQpyXXNC7vFQU"
+          "current_key": "AIzaSyB_Sh8nD_JgPzwBs99X6OYgnP6Ptgpc3b4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "350478129843-m02tkst34ebqn6kbq7lk4mtgcj6s715h.apps.googleusercontent.com",
+              "client_id": "829138065824-dp8j226v2s381ghh85qkbdrru2hnkc2k.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
