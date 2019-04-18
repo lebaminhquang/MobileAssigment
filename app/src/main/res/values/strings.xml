@@ -6,4 +6,20 @@
     <string name="user_name_default">User</string>
     <string name="user_email_default">"@UserEmail"</string>
     <string name="default_card_list_name">List Name</string>
+
+    <!--those strings are for login layout-->
+    <string name="server_client_id">829138065824-dp8j226v2s381ghh85qkbdrru2hnkc2k.apps.googleusercontent.com</string>
+    <string name="email">Email</string>
+    <string name="username">UserName</string>
+    <string name="password">Password</string>
+    <string name="password_confirm">Confirm Password</string>
+    <string name="login">Log in</string>
+    <string name="loginFacebook">Log in with FaceBook</string>
+    <string name="loginGoogle">Log in with Google</string>
+    <string name="Or">Others Ways</string>
+    <string name="forgetPassword">Forget Password?</string>
+    <string name="signUp">Sign Up</string>
+    <string name="error_Login">Log In fail. Something is wrong !!!</string>
+    <!--end strings for login layout-->
+
 </resources>

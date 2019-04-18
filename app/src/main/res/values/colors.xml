@@ -10,4 +10,8 @@
     <color name="defaultTextColor">#000</color>
     <color name="defaultBoardBackground">#2897ff</color>
     <color name="cardBackGround">#fff</color>
+
+    <color name="transparentBackgroundLogin">#668A97E4</color>
+    <color name="textLoginColor">#FFFFFF</color>
+    <color name="backgroundLoginGoogle">#46B3E6</color>
 </resources>
