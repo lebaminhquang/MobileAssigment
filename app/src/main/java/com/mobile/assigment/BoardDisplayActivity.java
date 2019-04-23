@@ -20,15 +20,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.mobile.assigment.presenter.ListCardAdapter;
+import com.mobile.assigment.presenter.OnCardClickedCallback;
 import com.mobile.assigment.view.BoardMembersFragment;
 import com.mobile.assigment.view.BoardSettingFragment;
+import com.mobile.assigment.view.CardFragment;
 
 import java.util.ArrayList;
 
-public class BoardDisplayActivity extends AppCompatActivity {
+public class BoardDisplayActivity extends AppCompatActivity implements OnCardClickedCallback{
     private static String EXTRA_MESSAGE = "com.mobile.assignment";
     private ArrayList<String> mListCardNames = new ArrayList<>();
     private RecyclerView.LayoutManager mLayoutManager;
@@ -42,6 +46,10 @@ public class BoardDisplayActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
     private BoardMembersFragment mBoardMembersFragment;
     private BoardSettingFragment mBoardSettingFragment;
+    private CardFragment mCardFragment;
+
+    private LinearLayout mCardNameLinearLayout;
+    private EditText mCardNameEditText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +58,8 @@ public class BoardDisplayActivity extends AppCompatActivity {
         mDrawerLayout = findViewById(R.id.board_display_drawer_layout);
         mNavigationView = findViewById(R.id.board_display_nav_view);
         mToolbar = findViewById(R.id.board_display_toolbar);
+        mCardNameLinearLayout = findViewById(R.id.card_name_layout);
+        mCardNameEditText = findViewById(R.id.card_name_txt);
 
         Intent intent = getIntent();
         mBoardName = intent.getStringExtra(EXTRA_MESSAGE);
@@ -75,6 +85,7 @@ public class BoardDisplayActivity extends AppCompatActivity {
         mFragmentManager = getSupportFragmentManager();
         mBoardMembersFragment = new BoardMembersFragment();
         mBoardSettingFragment = new BoardSettingFragment();
+        mCardFragment = new CardFragment();
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
@@ -117,10 +128,7 @@ public class BoardDisplayActivity extends AppCompatActivity {
         switch(id) {
             case android.R.id.home:
                 if (mFragmentManager.getBackStackEntryCount() > 0) {
-                    mFragmentManager.popBackStack();
-                    mListCardRecyclerView.setVisibility(View.VISIBLE);
-                    findViewById(R.id.board_settings).setVisibility(View.VISIBLE);
-                    mToolbar.setTitle(mBoardName);;
+                    switchBackToMainFragment();
                 } else {
                     NavUtils.navigateUpFromSameTask(this);
                 }
@@ -138,7 +146,7 @@ public class BoardDisplayActivity extends AppCompatActivity {
         mListCardRecyclerView.setLayoutManager(mLayoutManager);
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(mListCardRecyclerView);
-        mAdapter = new ListCardAdapter(mListCardNames);
+        mAdapter = new ListCardAdapter(mListCardNames, this);
         mAdapter.setParentActivity(BoardDisplayActivity.this);
         mListCardRecyclerView.setAdapter(mAdapter);
     }
@@ -154,5 +162,33 @@ public class BoardDisplayActivity extends AppCompatActivity {
         //switch to the new fragment
         mFragmentManager.beginTransaction().replace(R.id.board_content, fragment).addToBackStack(fragmentName.toString()).commit();
         mToolbar.setTitle(fragmentName);
+    }
+
+    @Override
+    public void displayCardFragment(String cardName) {
+        //change toolbar
+        mCardNameLinearLayout.setVisibility(View.VISIBLE);
+        mCardNameEditText.setText(cardName);
+        mToolbar.setBackgroundColor(getResources().getColor(R.color.cardFragmentToolbarBackground));
+
+        //hide the menu
+        findViewById(R.id.board_settings).setVisibility(View.GONE);
+        //hide the main view
+        mListCardRecyclerView.setVisibility(View.GONE);
+        mFragmentManager.beginTransaction().replace(R.id.board_content, mCardFragment)
+                .addToBackStack("Card_fragment: " + cardName).commit();
+    }
+
+    public void switchBackToMainFragment() {
+        //change toolbar
+        mFragmentManager.popBackStack();
+        mCardNameLinearLayout.setVisibility(View.GONE);
+        mToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        mToolbar.setTitle(mBoardName);;
+        //unhide the menu
+        findViewById(R.id.board_settings).setVisibility(View.VISIBLE);
+
+        //unhide the lists of cards
+        mListCardRecyclerView.setVisibility(View.VISIBLE);
     }
 }

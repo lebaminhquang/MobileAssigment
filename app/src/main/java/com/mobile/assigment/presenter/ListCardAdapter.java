@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobile.assigment.R;
 
@@ -20,6 +21,7 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
     private ArrayList<String> mDataset;
     private Activity mParentActivity;
     private ArrayList<ArrayList<String>> mCardsData;
+    private OnCardClickedCallback mCallback;
 
     public class ListCardViewHolder extends RecyclerView.ViewHolder {
         public TextView mListNameTextView;
@@ -37,19 +39,22 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
             mCardsRecyclerView.setLayoutManager(mLayoutManager);
         }
 
-        public void setUpAdapter(ArrayList<String> dataset) {
-            mAdapter = new CardsAdapter(dataset);
+        public void setUpAdapter(ArrayList<String> dataset, OnCardClickedCallback callback) {
+            mAdapter = new CardsAdapter(dataset, callback);
             mCardsRecyclerView.setAdapter(mAdapter);
+            mAdapter.setParentActivity(mParentActivity);
         }
     }
 
-    public ListCardAdapter(ArrayList<String> dataSet) {
+    public ListCardAdapter(ArrayList<String> dataSet, OnCardClickedCallback callback) {
         mDataset = dataSet;
         mCardsData = new ArrayList<>();
         //TODO: for now, we initialize an empty list of card names, in the future, load from database
         for (int i = 0; i < mDataset.size(); i++) {
             mCardsData.add(new ArrayList<String>());
         }
+
+         mCallback = callback;
     }
 
     public void setParentActivity(Activity activity) {
@@ -68,7 +73,7 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
     public void onBindViewHolder(final ListCardViewHolder holder, int position) {
         holder.mListNameTextView.setText(mDataset.get(position));
 
-        holder.setUpAdapter(mCardsData.get(position));
+        holder.setUpAdapter(mCardsData.get(position), mCallback);
         final int pos = position;
 
         //create data to add
