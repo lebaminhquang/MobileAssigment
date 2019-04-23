@@ -148,6 +148,7 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
         helper.attachToRecyclerView(mListCardRecyclerView);
         mAdapter = new ListCardAdapter(mListCardNames, this);
         mAdapter.setParentActivity(BoardDisplayActivity.this);
+        mAdapter.setUpAddCardDialogBox();
         mListCardRecyclerView.setAdapter(mAdapter);
     }
 

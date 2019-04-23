@@ -1,6 +1,8 @@
 package com.mobile.assigment.presenter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -8,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,11 +25,17 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
     private Activity mParentActivity;
     private ArrayList<ArrayList<String>> mCardsData;
     private OnCardClickedCallback mCallback;
+    private AlertDialog mAddCardDialog;
+    private EditText mNewCardNameTxt;
+
+    //current list is the list that is clicked on
+    private ListCardViewHolder mCurrentList;
 
     public class ListCardViewHolder extends RecyclerView.ViewHolder {
         public TextView mListNameTextView;
         public RecyclerView mCardsRecyclerView;
         public CircleButton mAddCardButton;
+        public CircleButton mDeleteListButton;
         public CardsAdapter mAdapter;
         private RecyclerView.LayoutManager mLayoutManager;
 
@@ -34,6 +43,7 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
             super(v);
             mListNameTextView = v.findViewById(R.id.card_list_name_txt);
             mAddCardButton = v.findViewById(R.id.add_card_btn);
+            mDeleteListButton = v.findViewById(R.id.delete_list_btn);
             mCardsRecyclerView = v.findViewById(R.id.cards_recycler_view);
             mLayoutManager = new LinearLayoutManager(mParentActivity, LinearLayoutManager.VERTICAL, false);
             mCardsRecyclerView.setLayoutManager(mLayoutManager);
@@ -55,10 +65,38 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
         }
 
          mCallback = callback;
+
     }
 
     public void setParentActivity(Activity activity) {
         this.mParentActivity = activity;
+    }
+
+    public void setUpAddCardDialogBox() {
+        //create dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(mParentActivity);
+        LayoutInflater inflater = mParentActivity.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.add_card_dialog_view, null);
+        mNewCardNameTxt = dialogView.findViewById(R.id.new_card_name_txt);
+
+        builder.setView(dialogView)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int pos = mCurrentList.getAdapterPosition();
+                        mCardsData.get(pos).add(mNewCardNameTxt.getText().toString());
+                        mCurrentList.mAdapter.notifyItemChanged(mCardsData.get(pos).size() - 1);
+                        mNewCardNameTxt.clearComposingText();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).setTitle("New card name");
+
+        mAddCardDialog = builder.create();
     }
 
     @Override
@@ -80,10 +118,17 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
         holder.mAddCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Adding new card");
-                System.out.println(pos);
-                mCardsData.get(pos).add("New card");
-                holder.mAdapter.notifyItemChanged(mCardsData.get(pos).size() - 1);
+                mCurrentList = holder;
+                mAddCardDialog.show();
+            }
+        });
+
+        holder.mDeleteListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDataset.remove(pos);
+                //TODO: remove this list from database
+                notifyDataSetChanged();
             }
         });
     }
