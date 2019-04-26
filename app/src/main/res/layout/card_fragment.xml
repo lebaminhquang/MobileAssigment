@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Edit card description..."
-            android:inputType="text"/>
+            android:inputType="text"
+            android:background="@null"/>
     </LinearLayout>
 
     <LinearLayout
@@ -25,6 +26,7 @@
         android:background="#f5fcff"
         android:layout_below="@id/card_description_layout">
         <LinearLayout
+            android:id="@+id/card_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -43,6 +45,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/card_members"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -61,6 +64,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/card_due_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -79,6 +83,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/card_checklist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -113,7 +118,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Add comment"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:background="@null"/>
     </LinearLayout>
 
     <LinearLayout

@@ -34,7 +34,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#FFF"
-                    android:textSize="30sp" />
+                    android:textSize="30sp"
+                    android:background="@null"/>
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 

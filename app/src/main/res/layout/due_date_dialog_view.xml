@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp">
+        <TextView
+            android:id="@+id/due_date_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Date..."
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:textSize="20sp"/>
+        <Button
+            android:id="@+id/due_date_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose"
+            android:textColor="#FFF"
+            android:background="@drawable/date_button_shape"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp">
+        <TextView
+            android:id="@+id/due_time_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Time..."
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:textSize="20sp"/>
+        <Button
+            android:id="@+id/due_time_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose"
+            android:textColor="#FFF"
+            android:background="@drawable/time_button_shape"/>
+    </LinearLayout>
+
+</LinearLayout>

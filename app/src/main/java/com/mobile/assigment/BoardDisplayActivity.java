@@ -86,6 +86,7 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
         mBoardMembersFragment = new BoardMembersFragment();
         mBoardSettingFragment = new BoardSettingFragment();
         mCardFragment = new CardFragment();
+        mCardFragment.setUp(BoardDisplayActivity.this);
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
