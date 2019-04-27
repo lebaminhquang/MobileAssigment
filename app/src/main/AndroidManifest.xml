@@ -10,18 +10,19 @@
         android:supportsRtl="true">
         <activity android:name=".authentication.LogInActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".firebase.FirebaseTestActivity"
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
-        <activity
-            android:name=".firebase.FirebaseTestActivity"
-            android:theme="@style/Theme.AppCompat">
         </activity>
         <activity
             android:name=".BoardDisplayActivity"
