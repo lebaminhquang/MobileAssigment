@@ -1,9 +1,17 @@
 package com.mobile.assigment.model;
 
+import android.support.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.mobile.assigment.model.Interface.CardInterface;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Card {
     private String cardID;
@@ -13,8 +21,8 @@ public class Card {
     private String createDate;
     private String dueDate;
     private String color;
-    private List<Comment> commentList;
-    private List<CheckList> checkListList;
+    private Map<String,Comment> commentList=new HashMap<>();
+    private Map<String,CheckList> checkListList = new HashMap<>();
 
     private static DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Lists");
 
@@ -77,46 +85,54 @@ public class Card {
         this.color = color;
     }
 
-    public List<Comment> getCommentList() {
+    public Map<String, Comment> getCommentList() {
         return commentList;
     }
 
-    public void setCommentList(List<Comment> commentList) {
+    public void setCommentList(Map<String, Comment> commentList) {
         this.commentList = commentList;
     }
 
-    public List<CheckList> getCheckListList() {
+    public Map<String, CheckList> getCheckListList() {
         return checkListList;
     }
 
-    public void setCheckListList(List<CheckList> checkListList) {
+    public void setCheckListList(Map<String, CheckList> checkListList) {
         this.checkListList = checkListList;
     }
 
-    public static void pushCard(Card card,String listID)
+    public static String createCard(Card card, String listID)
     {
-        reference.child(listID).child("cardList").push().setValue(card);
+        DatabaseReference cardReference = reference.child(listID).child("cardList");
+        String key = cardReference.push().getKey();
+        card.setCardID(key);
+        cardReference.child(key).setValue(card);
+        return key;
     }
-
-    @Override
-    public String toString() {
-        String cardString = "";
-        cardString += "Des : " + this.description+"\n";
-        if (!commentList.isEmpty())
-        {
-            for (Comment comment : commentList)
-            {
-                cardString += "Comment : " + comment.toString()+"\n";
+    public static void updateCard(Card card,String listID)
+    {
+        DatabaseReference cardReference = reference.child(listID).child("cardList");
+        cardReference.child(card.cardID).setValue(card);
+    }
+    public static void getCard(String cardID, String listID, final CardInterface cardInterface)
+    {
+        DatabaseReference cardReference = reference.child(listID).child("cardList");
+        reference.child(cardID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Card card = new Card();
+                cardInterface.receivedCard(card);
             }
-        }
-        if (!checkListList.isEmpty())
-        {
-            for (CheckList checkList : checkListList)
-            {
-                cardString += "Check list : "+checkList.toString()+"\n";
-            }
-        }
 
-        return cardString;
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public static void deleteCard(String cardID,String listID)
+    {
+        DatabaseReference cardReference = reference.child(listID).child("cardList");
+        cardReference.child(cardID).removeValue();
     }
 }

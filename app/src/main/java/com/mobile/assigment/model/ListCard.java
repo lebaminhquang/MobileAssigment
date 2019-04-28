@@ -10,14 +10,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.mobile.assigment.model.Interface.ListCardInterface;
 
 import java.util.List;
+import java.util.Map;
 
 public class ListCard {
     private String listCardID;
     private String listCardName;
-    private List<Card> cardList;
+    private Map<String,Card> cardList;
 
     static DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Lists");
-
+    static DatabaseReference root = FirebaseDatabase.getInstance().getReference();
     public ListCard() {
     }
 
@@ -37,29 +38,30 @@ public class ListCard {
         this.listCardName = listCardName;
     }
 
-    public List<Card> getCardList() {
+    public Map<String, Card> getCardList() {
         return cardList;
     }
 
-    public void setCardList(List<Card> cardList) {
+    public void setCardList(Map<String, Card> cardList) {
         this.cardList = cardList;
     }
 
-
-
-    public static String createListCard(ListCard listCard)
+    public static String createListCard(ListCard listCard, String boardID)
     {
         String key = reference.push().getKey();
+        listCard.setListCardID(key);
         reference.child(key).setValue(listCard);
+
+        root.child("Boards").child(boardID).child("listCardList").child(key).setValue(listCard.listCardName);
         return key;
     }
 
-    public static void updateListCard(ListCard listCard,String listCardID)
+    public static void updateListCard(ListCard listCard)
     {
-        reference.child(listCardID).setValue(listCard);
+        reference.child(listCard.listCardID).setValue(listCard);
     }
 
-    public static void getData(String listCardID, final ListCardInterface callback)
+    public static void getListCard(String listCardID, final ListCardInterface callback)
     {
 
         reference.child(listCardID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -76,22 +78,10 @@ public class ListCard {
         });
     }
 
-    public static void deleteData(String listCardID)
+    public static void deleteListCard(String listCardID)
     {
         reference.child(listCardID).removeValue();
     }
 
-    @Override
-    public String toString() {
-        String cardValue="";
-        cardValue += this.listCardName+"\n";
-        if (!cardList.isEmpty())
-        {
-            for (Card card : this.cardList)
-            {
-                cardValue+=card.toString()+"\n";
-            }
-        }
-        return cardValue;
-    }
+
 }

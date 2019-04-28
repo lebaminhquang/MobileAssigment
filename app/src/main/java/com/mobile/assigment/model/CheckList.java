@@ -46,23 +46,24 @@ public class CheckList {
     public static String createCheckList(CheckList checkList,String ListID,String CardID)
     {
         String key = reference.child(ListID).child("cardList").child(CardID).child("checkListList").push().getKey();
+        checkList.setChecklistID(key);
         reference.child(ListID).child("cardList").child(CardID).child("checkListList").child(key).setValue(checkList);
         return key;
     }
 
-    public static void updateCheckList(CheckList checkList,String ListID,String CardID,String CheckListID)
+    public static void updateCheckList(CheckList checkList,String ListID,String CardID)
     {
         reference.child(ListID).child("cardList").child(CardID)
-                .child("checkListList").child(CheckListID).setValue(checkList);
+                .child("checkListList").child(checkList.checklistID).setValue(checkList);
     }
 
-    public static void deleteCheckList(CheckList checkList,String ListID,String CardID,String CheckListID)
+    public static void deleteCheckList(String CheckListID,String ListID,String CardID)
     {
         reference.child(ListID).child("cardList").child(CardID)
                 .child("checkListList").child(CheckListID).removeValue();
     }
 
-    public static void getCheckList(String ListID, String CardID, String CheckListID, final CheckListInterface checkListInterface)
+    public static void getCheckList(String CheckListID , String ListID, String CardID,final CheckListInterface checkListInterface)
     {
         reference.child(ListID).child("cardList").child(CardID)
                 .child("checkListList").child(CheckListID)
@@ -78,12 +79,5 @@ public class CheckList {
 
                     }
                 });
-    }
-
-    @Override
-    public String toString() {
-        String checkString="";
-        checkString+=description;
-        return checkString;
     }
 }

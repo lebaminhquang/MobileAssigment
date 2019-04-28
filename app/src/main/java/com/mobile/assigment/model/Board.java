@@ -9,17 +9,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mobile.assigment.model.Interface.BoardInterface;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Board {
     private String boardName;
     private String boardID;
     private String background;
     private String label;
-    private List<ListCard> listCardList;
+    private Map<String,String> listCardList = new HashMap<>();
     private boolean visibility;
     private String deadline;
-    private List<Activity> activity;
+    private Map<String,Activity> activities = new HashMap<>();
 
     public enum BoardType {PersonalBoard,TeamBoard};
 
@@ -60,11 +62,11 @@ public class Board {
         this.label = label;
     }
 
-    public List<ListCard> getListCardList() {
+    public Map<String, String> getListCardList() {
         return listCardList;
     }
 
-    public void setListCardList(List<ListCard> listCardList) {
+    public void setListCardList(Map<String, String> listCardList) {
         this.listCardList = listCardList;
     }
 
@@ -84,15 +86,15 @@ public class Board {
         this.deadline = deadline;
     }
 
-    public List<Activity> getActivity() {
-        return activity;
+    public Map<String, Activity> getActivities() {
+        return activities;
     }
 
-    public void setActivity(List<Activity> activity) {
-        this.activity = activity;
+    public void setActivities(Map<String, Activity> activities) {
+        this.activities = activities;
     }
 
-    public static void createBoard(Board board,String OwnerID,BoardType type)
+    public static void createBoard(Board board, String OwnerID, BoardType type)
     {
         String key = reference.push().getKey();
         board.setBoardID(key);
@@ -139,4 +141,5 @@ public class Board {
             }
         });
     }
+
 }
