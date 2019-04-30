@@ -1,5 +1,6 @@
 package com.mobile.assigment;
 
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.mobile.assigment.authentication.LogInActivity;
 import com.mobile.assigment.view.AboutFragment;
 import com.mobile.assigment.view.BoardsFragment;
 import com.mobile.assigment.view.SettingsFragment;
@@ -19,7 +22,7 @@ import com.mobile.assigment.view.SettingsFragment;
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private FragmentManager mFragmentManager;
-
+    private FirebaseAuth firebaseAuth;
     //fragments
     private BoardsFragment mBoardsFragment;
     private SettingsFragment mSettingsFragment;
@@ -30,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        firebaseAuth = FirebaseAuth.getInstance();
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
 
         //setting up action bar
@@ -75,6 +80,14 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_about:
                 fragment = mAboutFragment;
                 break;
+            case R.id.nav_logout:
+                {
+                    firebaseAuth.signOut();
+                    startActivity(new Intent(MainActivity.this, LogInActivity.class));
+                    finish();
+                }
+
+
         }
         try {
             mFragmentManager.beginTransaction().replace(R.id.main_frame, fragment).commit();

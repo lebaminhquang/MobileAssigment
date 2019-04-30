@@ -67,7 +67,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         btnLoginGoogle = findViewById(R.id.btnLoginGoogle);
         createGoogleClient();
         firebaseAuth = FirebaseAuth.getInstance();
-        firebaseAuth.signOut();
+//        firebaseAuth.signOut();
 
         //UI
         txtSignUp = findViewById(R.id.txtSignUp);
@@ -163,14 +163,22 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
+    private void signUpAccount() {
+        Intent dk_intent = new Intent(this, SignUpActivity.class);
+        startActivity(dk_intent);
+    }
+    private void forgetPassword() {
+        Intent FP_intent = new Intent(this,ForgetPasswordActivity.class);
+        startActivity(FP_intent);
+    }
     @Override
     public void onClick(View view) {
         int id = view.getId();
         switch (id){
             case R.id.btnLoginGoogle: signinGoogle(apiClient);break;
-//            case R.id.txtSignUp: signUpAccount();break;
+            case R.id.txtSignUp: signUpAccount();break;
             case R.id.btnLogIn: signInWithEmailAndPassword();break;
-//            case R.id.txtForgetPassword: forgetPassword();
+            case R.id.txtForgetPassword: forgetPassword();
         }
     }
 

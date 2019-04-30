@@ -17,4 +17,10 @@
             android:icon="@drawable/ic_menu_about"
             android:title="@string/nav_about" />
     </group>
+    <group android:id="@+id/nav_grp3" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_eject_black_24dp"
+            android:title="@string/nav_logout" />
+    </group>
 </menu>
