@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.mobile.assigment.R;
 
@@ -27,6 +28,7 @@ public class CardFragment extends Fragment {
     LinearLayout mCardMemberLayout;
     LinearLayout mCardDueDateLayout;
     LinearLayout mCardChecklistLayout;
+    LinearLayout mCardLabelList;
 
     AlertDialog mMemberDialog;
     AlertDialog mDueDateDialog;
@@ -38,11 +40,13 @@ public class CardFragment extends Fragment {
     TimePickerDialog mTimePickerDialog;
     TextView mDueDateTxtView;
     TextView mDueTimeTxtView;
+    TextView mCardLabelTxtView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.card_fragment, container, false);
+        View view =  inflater.inflate(R.layout.card_fragment, container, false);
+        return view;
     }
 
     @Override
@@ -51,18 +55,23 @@ public class CardFragment extends Fragment {
         mCardMemberLayout = view.findViewById(R.id.card_members);
         mCardDueDateLayout = view.findViewById(R.id.card_due_date);
         mCardChecklistLayout = view.findViewById(R.id.card_checklist);
+        mCardLabelList = view.findViewById(R.id.card_label_list);
+        mCardLabelTxtView = view.findViewById(R.id.card_label_txt);
 
         //setting up onclicklisteners
         mCardLabelLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mCardLabelList.setVisibility(View.VISIBLE);
+                mCardLabelTxtView.setVisibility(View.GONE);
             }
         });
 
         mCardMemberLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCardLabelList.setVisibility(View.GONE);
+                mCardLabelTxtView.setVisibility(View.VISIBLE);
                 mMemberDialog.show();
             }
         });
@@ -70,6 +79,8 @@ public class CardFragment extends Fragment {
         mCardDueDateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCardLabelList.setVisibility(View.GONE);
+                mCardLabelTxtView.setVisibility(View.VISIBLE);
                 mDueDateDialog.show();
             }
         });
@@ -77,7 +88,8 @@ public class CardFragment extends Fragment {
         mCardChecklistLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mCardLabelList.setVisibility(View.GONE);
+                mCardLabelTxtView.setVisibility(View.VISIBLE);
             }
         });
     }

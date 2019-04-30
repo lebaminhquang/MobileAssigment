@@ -50,6 +50,10 @@ public class BoardsAdapter extends RecyclerView.Adapter<BoardsAdapter.BoardViewH
         holder.mTextView.setText(mDataset.get(position));
     }
 
+    public void addBoard(String boardName) {
+        mDataset.add(boardName);
+        notifyItemChanged(mDataset.size() - 1);
+    }
     @Override
     public int getItemCount() {
         return mDataset.size();

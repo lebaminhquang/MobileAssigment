@@ -86,7 +86,7 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
                         int pos = mCurrentList.getAdapterPosition();
                         mCardsData.get(pos).add(mNewCardNameTxt.getText().toString());
                         mCurrentList.mAdapter.notifyItemChanged(mCardsData.get(pos).size() - 1);
-                        mNewCardNameTxt.clearComposingText();
+                        mNewCardNameTxt.setText("");
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
