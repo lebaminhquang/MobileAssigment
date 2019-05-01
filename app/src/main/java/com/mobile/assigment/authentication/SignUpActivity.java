@@ -16,6 +16,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mobile.assigment.MainActivity;
 import com.mobile.assigment.R;
+import com.mobile.assigment.UserInfo;
+import com.mobile.assigment.model.User;
 
 public class SignUpActivity extends AppCompatActivity {
     //UI
@@ -89,7 +91,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         }
     }
-    private void logInWithEmailAndPassword(String email, String password) {
+    private void logInWithEmailAndPassword(final String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -100,6 +102,17 @@ public class SignUpActivity extends AppCompatActivity {
                 else if (task.isSuccessful())
                 {
                     Toast.makeText(SignUpActivity.this,"Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                    //add user to database
+                    String userId = firebaseAuth.getCurrentUser().getUid();
+                    UserInfo.getInstance().setUserEmail(email);
+                    UserInfo.getInstance().setUserName(email.split("@")[0]);
+                    UserInfo.getInstance().setId(userId);
+                    User user = new User();
+                    user.setName(email.split("@")[0]);
+                    user.setEmail(email);
+                    user.setUserId(userId);
+                    User.createUser(user, userId);
+                    //switch to main activity
                     Intent intentTC = new Intent(SignUpActivity.this, MainActivity.class);
                     startActivity(intentTC);
                     finish();
