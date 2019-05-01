@@ -10,12 +10,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.mobile.assigment.model.Interface.UserInterface;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class User {
     private String userId;
     private String name;
+    private String email;
     private Map<String,String> teamIDs = new HashMap<>();
     private Map<String,String> personalBoards;
 
@@ -38,6 +38,10 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email  = email;
     }
 
     public Map<String, String> getTeamIDs() {
@@ -68,7 +72,7 @@ public class User {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class) ;
-                userInterface.receivedUser(user);
+                userInterface.OnUserReceived(user);
             }
 
             @Override
@@ -77,6 +81,7 @@ public class User {
             }
         });
     }
+
     public static void deleteUser(String UID)
     {
         reference.child(UID).removeValue();

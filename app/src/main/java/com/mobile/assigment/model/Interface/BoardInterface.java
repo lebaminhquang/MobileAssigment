@@ -3,5 +3,5 @@ package com.mobile.assigment.model.Interface;
 import com.mobile.assigment.model.Board;
 
 public interface BoardInterface {
-    public void receivedBoard(Board board);
+    public void OnBoardReceived(Board board);
 }

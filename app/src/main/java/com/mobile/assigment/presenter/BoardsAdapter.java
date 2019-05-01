@@ -22,8 +22,8 @@ public class BoardsAdapter extends RecyclerView.Adapter<BoardsAdapter.BoardViewH
         }
     }
 
-    public BoardsAdapter(ArrayList<String> dataset) {
-        mDataset = dataset;
+    public BoardsAdapter() {
+        mDataset = new ArrayList<>();
     }
 
     public void setClickListener(View.OnClickListener callback) {

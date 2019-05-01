@@ -10,7 +10,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.mobile.assigment.model.Interface.BoardInterface;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Board {
@@ -102,18 +101,18 @@ public class Board {
         if (type.equals(BoardType.PersonalBoard))
         {
             DatabaseReference UserReference = FirebaseDatabase.getInstance().getReference().child("Users").child(OwnerID);
-            UserReference.child("personalBoards").child(key).setValue("board");
+            UserReference.child("personalBoards").child(key).setValue(key);
         } else
         {
             DatabaseReference TeamReference = FirebaseDatabase.getInstance().getReference().child("Teams").child(OwnerID);
-            TeamReference.child("boardList").child(key).setValue("board");
+            TeamReference.child("boardList").child(key).setValue(key);
         }
     }
     public static void updateBoard(Board board)
     {
         reference.child(board.boardID).setValue(board);
     }
-    public static void deleteBoard(String BID,String OwnerID, BoardType type)
+    public static void deleteBoard(String BID, String OwnerID, BoardType type)
     {
         reference.child(BID).removeValue();
         if (type.equals(BoardType.PersonalBoard))
@@ -132,7 +131,7 @@ public class Board {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Board board = dataSnapshot.getValue(Board.class);
-                boardInterface.receivedBoard(board);
+                boardInterface.OnBoardReceived(board);
             }
 
             @Override

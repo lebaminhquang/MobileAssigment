@@ -17,16 +17,21 @@ import android.widget.TextView;
 
 import com.mobile.assigment.BoardDisplayActivity;
 import com.mobile.assigment.R;
+import com.mobile.assigment.UserInfo;
+import com.mobile.assigment.model.Board;
+import com.mobile.assigment.model.Interface.BoardInterface;
+import com.mobile.assigment.model.Interface.UserInterface;
+import com.mobile.assigment.model.User;
 import com.mobile.assigment.presenter.BoardsAdapter;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-public class BoardsFragment extends Fragment{
+public class BoardsFragment extends Fragment implements BoardInterface, UserInterface{
     private RecyclerView mRecyclerView;
     private BoardsAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mAddBoardButton;
-    private ArrayList<String> mDataset;
     private AlertDialog mAddBoardDialog;
     private EditText mAddBoardTxt;
     private static String EXTRA_MESSAGE = "com.mobile.assignment";
@@ -38,13 +43,8 @@ public class BoardsFragment extends Fragment{
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        //TODO: find way to load data, this is just a dummy test
-        ArrayList<String> dummyData = new ArrayList<String>();
-        dummyData.add("BTL Mobile");
-        dummyData.add("BTL PPL");
-        dummyData.add("Project");
-        setData(dummyData);
         setUpRecyclerView();
+        loadAllBoards();
     }
 
     public void setUpRecyclerView() {
@@ -53,7 +53,7 @@ public class BoardsFragment extends Fragment{
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new BoardsAdapter(mDataset);
+        mAdapter = new BoardsAdapter();
         mAdapter.setClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +76,9 @@ public class BoardsFragment extends Fragment{
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mAdapter.addBoard(mAddBoardTxt.getText().toString());
+                        String newBoardName = mAddBoardTxt.getText().toString();
+                        mAdapter.addBoard(newBoardName);
+                        pushBoardToDatabase(newBoardName);
                         mAddBoardTxt.setText("");
                     }
                 })
@@ -101,7 +103,28 @@ public class BoardsFragment extends Fragment{
         newIntent.putExtra(EXTRA_MESSAGE, boardName);
         getActivity().startActivity(newIntent);
     }
-    public void setData(ArrayList<String> data) {
-        mDataset = data;
+
+    public void loadAllBoards() {
+        User.getUser(UserInfo.getInstance().getId(), this);
+    }
+
+    public void pushBoardToDatabase(String boardName) {
+        Board newBoard = new Board();
+        newBoard.setBoardName(boardName);
+        Board.createBoard(newBoard, UserInfo.getInstance().getId(), Board.BoardType.PersonalBoard);
+    }
+
+    @Override
+    public void OnBoardReceived(Board board) {
+        mAdapter.addBoard(board.getBoardName());
+    }
+
+    @Override
+    public void OnUserReceived(User user) {
+        if (user.getPersonalBoards() != null) {
+            for (String boardId : user.getPersonalBoards().values()) {
+                Board.getBoard(boardId, this);
+            }
+        }
     }
 }
