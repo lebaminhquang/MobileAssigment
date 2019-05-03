@@ -62,8 +62,10 @@ public class MainActivity extends AppCompatActivity {
         View navheader = navigationView.getHeaderView(0);
         TextView profileName = navheader.findViewById(R.id.profile_name);
         TextView profileEmail = navheader.findViewById(R.id.profile_email);
+        TextView profileAvatar = navheader.findViewById(R.id.profile_avatar);
         profileEmail.setText(UserInfo.getInstance().getEmail());
-        profileName.setText(UserInfo.getInstance().getName());
+        profileName.setText(UserInfo.getInstance().getName().toUpperCase());
+        profileAvatar.setText(UserInfo.getInstance().getName().substring(0,1).toUpperCase());
 
         //create fragments
         mFragmentManager = getSupportFragmentManager();
