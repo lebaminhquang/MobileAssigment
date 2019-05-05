@@ -2,10 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:title="Add List"
+        android:id="@+id/add_list_menu_btn"
+        android:icon="@drawable/ic_add_list"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom">
+    </item>
+    <item
         android:title="Setting"
         android:id="@+id/board_settings"
         android:icon="@drawable/ic_more_horiz"
-        android:orderInCategory="100"
+        android:orderInCategory="120"
         app:showAsAction="ifRoom">
     </item>
 </menu>

@@ -7,10 +7,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mobile.assigment.model.Interface.CardInterface;
+import com.mobile.assigment.model.Interface.OnCardsReceivedCallback;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Card {
@@ -24,7 +23,7 @@ public class Card {
     private Map<String,Comment> commentList=new HashMap<>();
     private Map<String,CheckList> checkListList = new HashMap<>();
 
-    private static DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Lists");
+    private static DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Cards");
 
     public Card() {
     }
@@ -103,33 +102,36 @@ public class Card {
 
     public static String createCard(Card card, String listID)
     {
-        DatabaseReference cardReference = reference.child(listID).child("cardList");
-        String key = cardReference.push().getKey();
+        String key = reference.push().getKey();
         card.setCardID(key);
-        cardReference.child(key).setValue(card);
+        //add card
+        reference.child(key).setValue(card);
+
+        //save card to list
+        DatabaseReference listReference = FirebaseDatabase.getInstance().getReference().child("Lists");
+        listReference.child(listID).child("cardList").child(key).setValue(card.getName());
         return key;
     }
-    public static void updateCard(Card card,String listID)
+    public static void updateCard(Card card)
     {
-        DatabaseReference cardReference = reference.child(listID).child("cardList");
-        cardReference.child(card.cardID).setValue(card);
+        reference.child(card.cardID).setValue(card);
     }
-    public static void getCard(String cardID, String listID, final CardInterface cardInterface)
-    {
-        DatabaseReference cardReference = reference.child(listID).child("cardList");
-        reference.child(cardID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Card card = new Card();
-                cardInterface.receivedCard(card);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    public static void getCard(String cardID, String listID, final OnCardsReceivedCallback cardInterface)
+//    {
+//        DatabaseReference cardReference = reference.child(listID).child("cardList");
+//        reference.child(cardID).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Card card = new Card();
+//                cardInterface.onCardReceived(card);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
     public static void deleteCard(String cardID,String listID)
     {
         DatabaseReference cardReference = reference.child(listID).child("cardList");

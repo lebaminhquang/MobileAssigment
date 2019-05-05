@@ -1,9 +1,12 @@
 package com.mobile.assigment;
 
+import com.mobile.assigment.model.Board;
+
 public class UserInfo {
     private String mName;
     private String mEmail;
     private String mId;
+    private Board mCurrentBoard;
     private static UserInfo mInstance;
     private UserInfo() {
 
@@ -38,5 +41,13 @@ public class UserInfo {
 
     public String getId() {
         return mId;
+    }
+
+    public void setCurrentBoard(Board board) {
+        mCurrentBoard = board;
+    }
+
+    public Board getCurrentBoard() {
+        return mCurrentBoard;
     }
 }

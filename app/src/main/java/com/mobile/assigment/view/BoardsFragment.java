@@ -34,6 +34,7 @@ public class BoardsFragment extends Fragment implements BoardInterface, UserInte
     private FloatingActionButton mAddBoardButton;
     private AlertDialog mAddBoardDialog;
     private EditText mAddBoardTxt;
+    private ArrayList<Board> mBoardList = new ArrayList<>();
     private static String EXTRA_MESSAGE = "com.mobile.assignment";
 
     @Override
@@ -58,6 +59,9 @@ public class BoardsFragment extends Fragment implements BoardInterface, UserInte
             @Override
             public void onClick(View v) {
                 int pos = mRecyclerView.indexOfChild(v);
+                //load the clicked board
+                UserInfo.getInstance().setCurrentBoard(mBoardList.get(pos));
+
                 View childView = mRecyclerView.getChildAt(pos);
                 TextView boardNameTextView = (TextView) childView.findViewById(R.id.board_project_name);
                 String boardName = boardNameTextView.getText().toString();
@@ -116,6 +120,7 @@ public class BoardsFragment extends Fragment implements BoardInterface, UserInte
 
     @Override
     public void OnBoardReceived(Board board) {
+        mBoardList.add(board);
         mAdapter.addBoard(board.getBoardName());
     }
 

@@ -3,26 +3,13 @@ package com.mobile.assigment.firebase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.mobile.assigment.R;
 import com.mobile.assigment.model.Board;
-import com.mobile.assigment.model.Card;
-import com.mobile.assigment.model.CheckList;
-import com.mobile.assigment.model.Comment;
-import com.mobile.assigment.model.Interface.ListCardInterface;
-import com.mobile.assigment.model.ListCard;
 import com.mobile.assigment.model.Team;
-import com.mobile.assigment.model.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FirebaseTestActivity extends AppCompatActivity {
 

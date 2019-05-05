@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mobile.assigment.model.Interface.BoardInterface;
+import com.mobile.assigment.model.Interface.OnListsInBoardReceived;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -141,4 +142,21 @@ public class Board {
         });
     }
 
+    public static void getListCardInBoard(String BID, final OnListsInBoardReceived receiveListInterface) {
+        reference.child(BID).child("listCardList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Map<String, String> lists = new HashMap<>();
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    lists.put(ds.getKey(), ds.getValue().toString());
+                }
+                receiveListInterface.onReceiveLists(lists);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

@@ -13,7 +13,8 @@ import com.mobile.assigment.R;
 import java.util.ArrayList;
 
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardViewHolder> {
-    private ArrayList<String> mCardNameList = new ArrayList<>();
+    private ArrayList<String> mCardNameList;
+    private ArrayList<String> mCardIDList;
     private Activity mParentActivity;
     OnCardClickedCallback mCallback;
     public class CardViewHolder extends RecyclerView.ViewHolder {
@@ -37,9 +38,16 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardViewHold
         holder.mCardName.setText(mCardNameList.get(position));
     }
 
-    public CardsAdapter(ArrayList<String> cardNameList, OnCardClickedCallback callback) {
-        mCardNameList = cardNameList;
+    public CardsAdapter(OnCardClickedCallback callback) {
+        mCardNameList = new ArrayList<>();
+        mCardIDList = new ArrayList<>();
         mCallback = callback;
+    }
+
+    public void addCard(String cardName, String cardID) {
+        mCardNameList.add(cardName);
+        mCardIDList.add(cardID);
+        notifyItemChanged(mCardNameList.size() - 1);
     }
 
 

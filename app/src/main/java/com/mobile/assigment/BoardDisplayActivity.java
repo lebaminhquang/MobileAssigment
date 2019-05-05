@@ -1,29 +1,34 @@
 package com.mobile.assigment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
+import com.mobile.assigment.model.Board;
+import com.mobile.assigment.model.Interface.OnCardsReceivedCallback;
+import com.mobile.assigment.model.Interface.OnListsInBoardReceived;
+import com.mobile.assigment.model.ListCard;
 import com.mobile.assigment.presenter.ListCardAdapter;
 import com.mobile.assigment.presenter.OnCardClickedCallback;
 import com.mobile.assigment.view.BoardMembersFragment;
@@ -31,10 +36,10 @@ import com.mobile.assigment.view.BoardSettingFragment;
 import com.mobile.assigment.view.CardFragment;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-public class BoardDisplayActivity extends AppCompatActivity implements OnCardClickedCallback{
+public class BoardDisplayActivity extends AppCompatActivity implements OnCardClickedCallback, OnListsInBoardReceived, OnCardsReceivedCallback {
     private static String EXTRA_MESSAGE = "com.mobile.assignment";
-    private ArrayList<String> mListCardNames = new ArrayList<>();
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mListCardRecyclerView;
     private ListCardAdapter mAdapter;
@@ -50,6 +55,9 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
 
     private LinearLayout mCardNameLinearLayout;
     private EditText mCardNameEditText;
+
+    private AlertDialog mAddListDialog;
+    private EditText mNewListNameEditText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,8 +78,9 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_back);
 
-        loadAllListsInBoard();
         setUpCardListRecyclerView();
+        loadAllListsInBoard();
+        setUpAddListDialog();
 
         mNavigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -111,10 +120,8 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
     }
 
     public void loadAllListsInBoard() {
-        //TODO: implement loading from database in the future
-        mListCardNames.add("To Do");
-        mListCardNames.add("Doing");
-        mListCardNames.add("Done");
+        //clear all lists to avoid adding twice
+        Board.getListCardInBoard(UserInfo.getInstance().getCurrentBoard().getBoardID(), this);
     }
 
     @Override
@@ -134,6 +141,9 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
                     NavUtils.navigateUpFromSameTask(this);
                 }
                 return true;
+            case R.id.add_list_menu_btn:
+                mAddListDialog.show();
+                return true;
             case R.id.board_settings:
                 mDrawerLayout.openDrawer(GravityCompat.END);
                 return true;
@@ -147,7 +157,7 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
         mListCardRecyclerView.setLayoutManager(mLayoutManager);
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(mListCardRecyclerView);
-        mAdapter = new ListCardAdapter(mListCardNames, this);
+        mAdapter = new ListCardAdapter(this);
         mAdapter.setParentActivity(BoardDisplayActivity.this);
         mAdapter.setUpAddCardDialogBox();
         mListCardRecyclerView.setAdapter(mAdapter);
@@ -166,6 +176,31 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
         mToolbar.setTitle(fragmentName);
     }
 
+    public void setUpAddListDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.add_list_dialog_view, null);
+        mNewListNameEditText = dialogView.findViewById(R.id.new_list_name_txt);
+
+        builder.setView(dialogView).setTitle("New List Name")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newListName = mNewListNameEditText.getText().toString();
+                        String newListID = pushNewListCardToDatabase(newListName);
+                        mAdapter.addList(newListName, newListID);
+                        mNewListNameEditText.setText("");
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        mAddListDialog = builder.create();
+    }
+
     @Override
     public void displayCardFragment(String cardName) {
         //change toolbar
@@ -175,6 +210,7 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
 
         //hide the menu
         findViewById(R.id.board_settings).setVisibility(View.GONE);
+        findViewById(R.id.add_list_menu_btn).setVisibility(View.GONE);
         //hide the main view
         mListCardRecyclerView.setVisibility(View.GONE);
         mFragmentManager.beginTransaction().replace(R.id.board_content, mCardFragment)
@@ -189,8 +225,32 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
         mToolbar.setTitle(mBoardName);;
         //unhide the menu
         findViewById(R.id.board_settings).setVisibility(View.VISIBLE);
-
+        findViewById(R.id.add_list_menu_btn).setVisibility(View.VISIBLE);
         //unhide the lists of cards
         mListCardRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    public String pushNewListCardToDatabase(String listName) {
+        ListCard lst = new ListCard();
+        lst.setListCardName(listName);
+        return ListCard.createListCard(lst, UserInfo.getInstance().getCurrentBoard().getBoardID());
+    }
+
+    @Override
+    public void onReceiveLists(Map<String, String> lists) {
+        //add list
+        for (Map.Entry<String, String> list: lists.entrySet()) {
+            int position = mAdapter.addList(list.getValue(), list.getKey());
+            //get the cards
+            ListCard.getAllCardsInList(list.getKey(), position, this);
+        }
+    }
+
+    @Override
+    public void onCardReceived(int position, Map<String, String> cards) {
+        RecyclerView.ViewHolder holder = mListCardRecyclerView.findViewHolderForAdapterPosition(position);
+        for (Map.Entry<String, String> card: cards.entrySet()) {
+            mAdapter.addCardToList((ListCardAdapter.ListCardViewHolder) holder, position, card.getValue(), card.getKey());
+        }
     }
 }

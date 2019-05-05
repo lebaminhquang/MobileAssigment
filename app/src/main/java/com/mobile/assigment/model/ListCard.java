@@ -7,19 +7,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mobile.assigment.model.Interface.ListCardInterface;
+import com.mobile.assigment.model.Interface.OnCardsReceivedCallback;
+import com.mobile.assigment.model.Interface.OnListsInBoardReceived;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ListCard {
     private String listCardID;
     private String listCardName;
-    private Map<String,Card> cardList;
+    private Map<String,Card> cardList = new HashMap<>();
 
     static DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Lists");
     static DatabaseReference root = FirebaseDatabase.getInstance().getReference();
-    public ListCard() {
+        public ListCard() {
     }
 
     public String getListCardID() {
@@ -61,14 +62,37 @@ public class ListCard {
         reference.child(listCard.listCardID).setValue(listCard);
     }
 
-    public static void getListCard(String listCardID, final ListCardInterface callback)
-    {
+//    public static void getListCard(String listCardID, final OnListsInBoardReceived callback)
+//    {
+//
+//        reference.child(listCardID).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                ListCard listCard = dataSnapshot.getValue(ListCard.class);
+//                callback.onReceiveLists(listCard);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
-        reference.child(listCardID).addListenerForSingleValueEvent(new ValueEventListener() {
+    public static void deleteListCard(String listCardID)
+    {
+        reference.child(listCardID).removeValue();
+    }
+
+    public static void getAllCardsInList(String listID, final int position, final OnCardsReceivedCallback callback) {
+        reference.child(listID).child("cardList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ListCard listCard = dataSnapshot.getValue(ListCard.class);
-                callback.receivedListCast(listCard);
+                Map<String, String> cards = new HashMap<>();
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                    cards.put(ds.getKey(), ds.getValue().toString());
+                }
+                callback.onCardReceived(position, cards);
             }
 
             @Override
@@ -76,11 +100,6 @@ public class ListCard {
 
             }
         });
-    }
-
-    public static void deleteListCard(String listCardID)
-    {
-        reference.child(listCardID).removeValue();
     }
 
 
