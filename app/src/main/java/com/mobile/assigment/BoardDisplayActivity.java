@@ -26,7 +26,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.mobile.assigment.model.Board;
-import com.mobile.assigment.model.Interface.OnCardsReceivedCallback;
+import com.mobile.assigment.model.Card;
+import com.mobile.assigment.model.Interface.OnCardLoadedCallback;
+import com.mobile.assigment.model.Interface.OnCardsInListReceivedCallback;
 import com.mobile.assigment.model.Interface.OnListsInBoardReceived;
 import com.mobile.assigment.model.ListCard;
 import com.mobile.assigment.presenter.ListCardAdapter;
@@ -35,10 +37,10 @@ import com.mobile.assigment.view.BoardMembersFragment;
 import com.mobile.assigment.view.BoardSettingFragment;
 import com.mobile.assigment.view.CardFragment;
 
-import java.util.ArrayList;
 import java.util.Map;
 
-public class BoardDisplayActivity extends AppCompatActivity implements OnCardClickedCallback, OnListsInBoardReceived, OnCardsReceivedCallback {
+public class BoardDisplayActivity extends AppCompatActivity implements OnCardClickedCallback,
+        OnListsInBoardReceived, OnCardsInListReceivedCallback, OnCardLoadedCallback {
     private static String EXTRA_MESSAGE = "com.mobile.assignment";
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mListCardRecyclerView;
@@ -157,7 +159,7 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
         mListCardRecyclerView.setLayoutManager(mLayoutManager);
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(mListCardRecyclerView);
-        mAdapter = new ListCardAdapter(this);
+        mAdapter = new ListCardAdapter(this, this);
         mAdapter.setParentActivity(BoardDisplayActivity.this);
         mAdapter.setUpAddCardDialogBox();
         mListCardRecyclerView.setAdapter(mAdapter);
@@ -202,11 +204,12 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
     }
 
     @Override
-    public void displayCardFragment(String cardName) {
+    public void displayCardFragment(String cardName, String cardID) {
         //change toolbar
         mCardNameLinearLayout.setVisibility(View.VISIBLE);
         mCardNameEditText.setText(cardName);
         mToolbar.setBackgroundColor(getResources().getColor(R.color.cardFragmentToolbarBackground));
+        mCardFragment.setCardNameAndID(cardName, cardID);
 
         //hide the menu
         findViewById(R.id.board_settings).setVisibility(View.GONE);
@@ -247,10 +250,15 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
     }
 
     @Override
-    public void onCardReceived(int position, Map<String, String> cards) {
+    public void onCardsInListReceived(int position, Map<String, String> cards) {
         RecyclerView.ViewHolder holder = mListCardRecyclerView.findViewHolderForAdapterPosition(position);
         for (Map.Entry<String, String> card: cards.entrySet()) {
             mAdapter.addCardToList((ListCardAdapter.ListCardViewHolder) holder, position, card.getValue(), card.getKey());
         }
+    }
+
+    @Override
+    public void onCardLoaded(Card card) {
+        mCardFragment.loadCardData(card);
     }
 }

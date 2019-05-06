@@ -7,8 +7,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mobile.assigment.model.Interface.OnCardsReceivedCallback;
-import com.mobile.assigment.model.Interface.OnListsInBoardReceived;
+import com.mobile.assigment.model.Interface.OnCardsInListReceivedCallback;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +83,7 @@ public class ListCard {
         reference.child(listCardID).removeValue();
     }
 
-    public static void getAllCardsInList(String listID, final int position, final OnCardsReceivedCallback callback) {
+    public static void getAllCardsInList(String listID, final int position, final OnCardsInListReceivedCallback callback) {
         reference.child(listID).child("cardList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -92,7 +91,7 @@ public class ListCard {
                 for (DataSnapshot ds: dataSnapshot.getChildren()) {
                     cards.put(ds.getKey(), ds.getValue().toString());
                 }
-                callback.onCardReceived(position, cards);
+                callback.onCardsInListReceived(position, cards);
             }
 
             @Override

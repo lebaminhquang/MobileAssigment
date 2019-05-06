@@ -1,6 +1,7 @@
 package com.mobile.assigment;
 
 import com.mobile.assigment.model.Board;
+import com.mobile.assigment.model.Card;
 
 public class UserInfo {
     private String mName;
@@ -8,6 +9,8 @@ public class UserInfo {
     private String mId;
     private Board mCurrentBoard;
     private static UserInfo mInstance;
+    private Card mCurrentCard;
+
     private UserInfo() {
 
     }
@@ -49,5 +52,13 @@ public class UserInfo {
 
     public Board getCurrentBoard() {
         return mCurrentBoard;
+    }
+
+    public void setCurrentCard(Card card) {
+        mCurrentCard = card;
+    }
+
+    public Card getCurrentCard() {
+        return mCurrentCard;
     }
 }

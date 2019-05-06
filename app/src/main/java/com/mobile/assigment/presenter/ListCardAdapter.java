@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.mobile.assigment.R;
 import com.mobile.assigment.model.Card;
+import com.mobile.assigment.model.Interface.OnCardLoadedCallback;
 
 import java.util.ArrayList;
 
@@ -23,7 +24,8 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
     private ArrayList<String> mListCardIDLst;
     private Activity mParentActivity;
     private ArrayList<ArrayList<String>> mCardsData;
-    private OnCardClickedCallback mCallback;
+    private OnCardClickedCallback mCardClickedCallback;
+    private OnCardLoadedCallback mCardLoadedCallback;
     private AlertDialog mAddCardDialog;
     private EditText mNewCardNameTxt;
 
@@ -48,14 +50,14 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
             mCardsRecyclerView.setLayoutManager(mLayoutManager);
         }
 
-        public void setUpAdapter(OnCardClickedCallback callback) {
-            mAdapter = new CardsAdapter(callback);
+        public void setUpAdapter(OnCardClickedCallback cardClickedCallback, OnCardLoadedCallback cardLoadedCallback) {
+            mAdapter = new CardsAdapter(cardClickedCallback, cardLoadedCallback);
             mCardsRecyclerView.setAdapter(mAdapter);
             mAdapter.setParentActivity(mParentActivity);
         }
     }
 
-    public ListCardAdapter(OnCardClickedCallback callback) {
+    public ListCardAdapter(OnCardClickedCallback cardClickedCallback, OnCardLoadedCallback cardLoadedCallback) {
         mListCardNameLst = new ArrayList<>();
         mListCardIDLst = new ArrayList<>();
         mCardsData = new ArrayList<>();
@@ -64,8 +66,8 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
             mCardsData.add(new ArrayList<String>());
         }
 
-         mCallback = callback;
-
+        mCardClickedCallback = cardClickedCallback;
+        mCardLoadedCallback = cardLoadedCallback;
     }
 
     public void setParentActivity(Activity activity) {
@@ -113,7 +115,7 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
     public void onBindViewHolder(final ListCardViewHolder holder, int position) {
         holder.mListNameTextView.setText(mListCardNameLst.get(position));
 
-        holder.setUpAdapter(mCallback);
+        holder.setUpAdapter(mCardClickedCallback, mCardLoadedCallback);
         final int pos = position;
 
         //create data to add

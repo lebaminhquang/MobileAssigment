@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mobile.assigment.R;
+import com.mobile.assigment.model.Card;
+import com.mobile.assigment.model.Interface.OnCardLoadedCallback;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,9 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardViewHold
     private ArrayList<String> mCardNameList;
     private ArrayList<String> mCardIDList;
     private Activity mParentActivity;
-    OnCardClickedCallback mCallback;
+    OnCardClickedCallback mCardClickedCallback;
+    OnCardLoadedCallback mCardLoadedCallback;
+
     public class CardViewHolder extends RecyclerView.ViewHolder {
         public TextView mCardName;
         public CardViewHolder(View v) {
@@ -26,7 +29,8 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardViewHold
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    mCallback.displayCardFragment(mCardNameList.get(position));
+                    mCardClickedCallback.displayCardFragment(mCardNameList.get(position), mCardIDList.get(position));
+                    Card.getCard(mCardIDList.get(position), mCardLoadedCallback);
                 }
             });
         }
@@ -38,10 +42,11 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardViewHold
         holder.mCardName.setText(mCardNameList.get(position));
     }
 
-    public CardsAdapter(OnCardClickedCallback callback) {
+    public CardsAdapter(OnCardClickedCallback cardClickedCallback, OnCardLoadedCallback cardLoadedCallback) {
         mCardNameList = new ArrayList<>();
         mCardIDList = new ArrayList<>();
-        mCallback = callback;
+        mCardClickedCallback = cardClickedCallback;
+        mCardLoadedCallback = cardLoadedCallback;
     }
 
     public void addCard(String cardName, String cardID) {

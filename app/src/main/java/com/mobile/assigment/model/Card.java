@@ -7,8 +7,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mobile.assigment.model.Interface.OnCardsReceivedCallback;
+import com.mobile.assigment.model.Interface.OnCardLoadedCallback;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,10 +17,12 @@ public class Card {
     private String cardID;
     private String name;
     private String description;
-    private String labels;
     private String createDate;
     private String dueDate;
     private String color;
+    private ArrayList<String> labelNames;
+    private ArrayList<String> labelColors;
+    private ArrayList<Boolean> labelChecked;
     private Map<String,Comment> commentList=new HashMap<>();
     private Map<String,CheckList> checkListList = new HashMap<>();
 
@@ -52,12 +55,28 @@ public class Card {
         this.description = description;
     }
 
-    public String getLabels() {
-        return labels;
+    public void setLabelNames(ArrayList<String> names) {
+        this.labelNames = names;
     }
 
-    public void setLabels(String labels) {
-        this.labels = labels;
+    public void setLabelColors(ArrayList<String> colors) {
+        this.labelColors = colors;
+    }
+
+    public void setLabelChecked(ArrayList<Boolean> checked) {
+        this.labelChecked = checked;
+    }
+
+    public ArrayList<String> getLabelNames() {
+        return labelNames;
+    }
+
+    public ArrayList<Boolean> getLabelChecked() {
+        return labelChecked;
+    }
+
+    public ArrayList<String> getLabelColors() {
+        return labelColors;
     }
 
     public String getCreateDate() {
@@ -116,22 +135,22 @@ public class Card {
     {
         reference.child(card.cardID).setValue(card);
     }
-//    public static void getCard(String cardID, String listID, final OnCardsReceivedCallback cardInterface)
-//    {
-//        DatabaseReference cardReference = reference.child(listID).child("cardList");
-//        reference.child(cardID).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                Card card = new Card();
-//                cardInterface.onCardReceived(card);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
+
+    public static void getCard(String cardID, final OnCardLoadedCallback callback) {
+        reference.child(cardID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Card card = dataSnapshot.getValue(Card.class);
+                callback.onCardLoaded(card);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public static void deleteCard(String cardID,String listID)
     {
         DatabaseReference cardReference = reference.child(listID).child("cardList");
