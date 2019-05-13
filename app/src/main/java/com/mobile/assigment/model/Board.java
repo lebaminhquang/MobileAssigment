@@ -10,7 +10,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.mobile.assigment.model.Interface.BoardInterface;
 import com.mobile.assigment.model.Interface.OnListsInBoardReceived;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Board {
@@ -22,6 +24,7 @@ public class Board {
     private boolean visibility;
     private String deadline;
     private Map<String,Activity> activities = new HashMap<>();
+    private ArrayList<String> memberList = new ArrayList<>();
 
     public enum BoardType {PersonalBoard,TeamBoard};
 
@@ -92,6 +95,14 @@ public class Board {
 
     public void setActivities(Map<String, Activity> activities) {
         this.activities = activities;
+    }
+
+    public ArrayList<String> getMemberList() {
+        return memberList;
+    }
+
+    public void setMemberList(ArrayList<String> memberList) {
+        this.memberList = memberList;
     }
 
     public static void createBoard(Board board, String OwnerID, BoardType type)

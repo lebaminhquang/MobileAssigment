@@ -16,11 +16,18 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mobile.assigment.authentication.LogInActivity;
 import com.mobile.assigment.model.User;
 import com.mobile.assigment.view.AboutFragment;
 import com.mobile.assigment.view.BoardsFragment;
 import com.mobile.assigment.view.SettingsFragment;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
@@ -31,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private SettingsFragment mSettingsFragment;
     private AboutFragment mAboutFragment;
 
+    //  Real-time database
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference dbRef = database.getReference("Users");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         changeToCurrentUserInfo();
+
+        getAllUserList();
 
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
         //setting up action bar
@@ -128,5 +141,28 @@ public class MainActivity extends AppCompatActivity {
         UserInfo.getInstance().setUserEmail(email);
         UserInfo.getInstance().setUserName(email.split("@")[0]);
         UserInfo.getInstance().setId(userId);
+    }
+
+    public void getAllUserList() {
+        // Read from the database
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                ArrayList<User> listUser = new ArrayList<>();
+                Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
+                for (DataSnapshot ds : iterable) {
+                    User user = ds.getValue(User.class);
+                    listUser.add(user);
+                }
+                UserList.getInstance().setAllUsers(listUser);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
     }
 }

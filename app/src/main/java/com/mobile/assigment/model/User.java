@@ -44,6 +44,10 @@ public class User {
         this.email  = email;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public Map<String, String> getTeamIDs() {
         return teamIDs;
     }

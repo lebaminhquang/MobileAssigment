@@ -4,31 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF">
-    <LinearLayout
+    <!--<LinearLayout-->
+        <!--android:id="@+id/add_member"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:background="@drawable/add_member_btn_shape"-->
+        <!--android:padding="10dp"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:layout_alignParentEnd="true">-->
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/ic_add_member"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_marginRight="5dp"/>-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="ADD MEMBERS"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:textColor="#FFF"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_marginRight="5dp"/>-->
+    <!--</LinearLayout>-->
+
+    <Button
         android:id="@+id/add_member"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="Add new member"
+        android:background="#136207"
+        android:textColor="#ffffff"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@drawable/add_member_btn_shape"
         android:padding="10dp"
         android:layout_margin="10dp"
-        android:layout_alignParentEnd="true">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_add_member"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ADD MEMBERS"
-            android:gravity="center_vertical"
-            android:textColor="#FFF"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
-    </LinearLayout>
+        android:layout_alignParentEnd="true"
+
+        />
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/board_members_recyclerview"
