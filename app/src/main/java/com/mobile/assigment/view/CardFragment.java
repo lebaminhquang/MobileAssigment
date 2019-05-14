@@ -8,8 +8,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.mobile.assigment.BoardDisplayActivity;
 import com.mobile.assigment.R;
 import com.mobile.assigment.UserInfo;
 import com.mobile.assigment.model.Card;
@@ -42,7 +45,6 @@ public class CardFragment extends Fragment {
     Button mPickDateBtn;
     Button mPickTimeBtn;
     EditText mCardDescriptionEdt;
-    LinearLayout mSaveCardBtn;
     DatePickerDialog mDatePickerDialog;
     TimePickerDialog mTimePickerDialog;
     TextView mDueDateTxtView;
@@ -71,7 +73,6 @@ public class CardFragment extends Fragment {
         mCardDueDateLayout = view.findViewById(R.id.card_due_date);
         mCardChecklistLayout = view.findViewById(R.id.card_checklist);
         mCardLabelTxtView = view.findViewById(R.id.card_label_txt);
-        mSaveCardBtn = view.findViewById(R.id.save_card_btn);
         mCardDueDateTimeTextView = view.findViewById(R.id.card_due_date_time_txt);
 
         setUpCardLabelRecyclerView();
@@ -110,24 +111,22 @@ public class CardFragment extends Fragment {
                 mCardLabelTxtView.setVisibility(View.VISIBLE);
             }
         });
-
-        //set up save card btn
-        mSaveCardBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Card card = new Card();
-                card.setName(mCardName);
-                card.setCardID(mCardID);
-                card.setDescription(mCardDescriptionEdt.getText().toString());
-                card.setDueDate(mCardDueDateTimeTextView.getText().toString());
-                card.setLabelNames(mCardLabelsAdapter.getLabelNames());
-                card.setLabelChecked(mCardLabelsAdapter.getLabelsChecked());
-                card.setLabelColors(mCardLabelsAdapter.getLabelColors());
-                UserInfo.getInstance().setCurrentCard(card);
-                Card.updateCard(card);
-            }
-        });
     }
+
+    public void saveCard() {
+        Card card = new Card();
+        mCardName = ((BoardDisplayActivity) getActivity()).mCardNameEditText.getText().toString();
+        card.setName(mCardName);
+        card.setCardID(mCardID);
+        card.setDescription(mCardDescriptionEdt.getText().toString());
+        card.setDueDate(mCardDueDateTimeTextView.getText().toString());
+        card.setLabelNames(mCardLabelsAdapter.getLabelNames());
+        card.setLabelChecked(mCardLabelsAdapter.getLabelsChecked());
+        card.setLabelColors(mCardLabelsAdapter.getLabelColors());
+        UserInfo.getInstance().setCurrentCard(card);
+        Card.updateCard(card);
+    }
+
     public void setUpCardLabelRecyclerView() {
         //default color
         ArrayList<String> colors = new ArrayList<>();
@@ -261,7 +260,6 @@ public class CardFragment extends Fragment {
         mCardDueDateTimeTextView.setText(card.getDueDate());
         mCardName = card.getName();
         mCardID = card.getCardID();
-
         mCardLabelsAdapter.setData(card.getLabelNames(), card.getLabelColors(), card.getLabelChecked());
     }
 }

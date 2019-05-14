@@ -15,4 +15,11 @@
         android:orderInCategory="120"
         app:showAsAction="ifRoom">
     </item>
+    <item
+        android:title="Save card"
+        android:id="@+id/save_card_menu_btn"
+        android:icon="@drawable/ic_card_save_changes"
+        android:orderInCategory="140"
+        app:showAsAction="ifRoom">
+    </item>
 </menu>

@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mobile.assigment.UserInfo;
 import com.mobile.assigment.model.Interface.OnCardLoadedCallback;
 
 import java.util.ArrayList;
@@ -134,6 +135,8 @@ public class Card {
     public static void updateCard(Card card)
     {
         reference.child(card.cardID).setValue(card);
+        DatabaseReference listReference = FirebaseDatabase.getInstance().getReference().child("Lists").child(UserInfo.getInstance().getCurrentListID());
+        listReference.child("cardList").child(card.getCardID()).setValue(card.getName());
     }
 
     public static void getCard(String cardID, final OnCardLoadedCallback callback) {

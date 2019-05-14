@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -54,25 +57,31 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
     private BoardMembersFragment mBoardMembersFragment;
     private BoardSettingFragment mBoardSettingFragment;
     private CardFragment mCardFragment;
-
-    private LinearLayout mCardNameLinearLayout;
-    private EditText mCardNameEditText;
-
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    public LinearLayout mCardNameLinearLayout;
+    public EditText mCardNameEditText;
+    private AppBarLayout mAppBarLayout;
     private AlertDialog mAddListDialog;
     private EditText mNewListNameEditText;
+
+    private Boolean mIsInCardFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board_display);
+        mIsInCardFragment = false;
         mDrawerLayout = findViewById(R.id.board_display_drawer_layout);
         mNavigationView = findViewById(R.id.board_display_nav_view);
         mToolbar = findViewById(R.id.board_display_toolbar);
         mCardNameLinearLayout = findViewById(R.id.card_name_layout);
         mCardNameEditText = findViewById(R.id.card_name_txt);
-
+        mCollapsingToolbarLayout = findViewById(R.id.board_collapsing_toolbar_layout);
+        mAppBarLayout = findViewById(R.id.board_display_app_bar_layout);
+        setUpAppBarLayout();
         Intent intent = getIntent();
         mBoardName = intent.getStringExtra(EXTRA_MESSAGE);
+        mCollapsingToolbarLayout.setTitleEnabled(false);
         setSupportActionBar(mToolbar);
 
         ActionBar actionbar = getSupportActionBar();
@@ -149,6 +158,9 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
             case R.id.board_settings:
                 mDrawerLayout.openDrawer(GravityCompat.END);
                 return true;
+            case R.id.save_card_menu_btn:
+                mCardFragment.saveCard();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -205,32 +217,39 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
 
     @Override
     public void displayCardFragment(String cardName, String cardID) {
+        mIsInCardFragment = true;
         //change toolbar
         mCardNameLinearLayout.setVisibility(View.VISIBLE);
         mCardNameEditText.setText(cardName);
-        mToolbar.setBackgroundColor(getResources().getColor(R.color.cardFragmentToolbarBackground));
+        mCollapsingToolbarLayout.setBackgroundColor(getResources().getColor(R.color.cardFragmentToolbarBackground));
         mCardFragment.setCardNameAndID(cardName, cardID);
-
+        mToolbar.setTitle("");
         //hide the menu
         findViewById(R.id.board_settings).setVisibility(View.GONE);
         findViewById(R.id.add_list_menu_btn).setVisibility(View.GONE);
+        findViewById(R.id.save_card_menu_btn).setVisibility(View.VISIBLE);
         //hide the main view
         mListCardRecyclerView.setVisibility(View.GONE);
         mFragmentManager.beginTransaction().replace(R.id.board_content, mCardFragment)
                 .addToBackStack("Card_fragment: " + cardName).commit();
+
+        setUpCollapsingToolbar();
     }
 
     public void switchBackToMainFragment() {
         //change toolbar
+        mIsInCardFragment = false;
         mFragmentManager.popBackStack();
         mCardNameLinearLayout.setVisibility(View.GONE);
-        mToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        mToolbar.setTitle(mBoardName);;
+        mToolbar.setTitle(mBoardName);
+        mCollapsingToolbarLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
         //unhide the menu
         findViewById(R.id.board_settings).setVisibility(View.VISIBLE);
         findViewById(R.id.add_list_menu_btn).setVisibility(View.VISIBLE);
+        findViewById(R.id.save_card_menu_btn).setVisibility(View.GONE);
         //unhide the lists of cards
         mListCardRecyclerView.setVisibility(View.VISIBLE);
+        setUpCollapsingToolbar();
     }
 
     public String pushNewListCardToDatabase(String listName) {
@@ -260,5 +279,39 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
     @Override
     public void onCardLoaded(Card card) {
         mCardFragment.loadCardData(card);
+    }
+
+
+    public void setUpCollapsingToolbar() {
+        if (mIsInCardFragment) {
+            final float scale = getResources().getDisplayMetrics().density;
+            ViewGroup.LayoutParams params = mCollapsingToolbarLayout.getLayoutParams();
+            params.height = (int) (150 * scale + 0.5f);
+            mCollapsingToolbarLayout.setLayoutParams(params);
+            mCollapsingToolbarLayout.requestLayout();
+        } else {
+            ViewGroup.LayoutParams params = mCollapsingToolbarLayout.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mCollapsingToolbarLayout.setLayoutParams(params);
+            mCollapsingToolbarLayout.requestLayout();
+        }
+    }
+
+    public void setUpAppBarLayout() {
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange() == 0) {
+                    //  Collapsed
+                    if (mIsInCardFragment) {
+                        mToolbar.setTitle(mCardNameEditText.getText().toString());
+                    }
+                } else {
+                    if (mIsInCardFragment) {
+                        mToolbar.setTitle("");
+                    }
+                }
+            }
+        });
     }
 }

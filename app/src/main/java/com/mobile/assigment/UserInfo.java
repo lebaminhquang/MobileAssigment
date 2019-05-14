@@ -9,6 +9,7 @@ public class UserInfo {
     private String mId;
     private Board mCurrentBoard;
     private static UserInfo mInstance;
+    private String mCurrentListID;
     private Card mCurrentCard;
 
     private UserInfo() {
@@ -60,5 +61,13 @@ public class UserInfo {
 
     public Card getCurrentCard() {
         return mCurrentCard;
+    }
+
+    public void setCurrentListID(String id) {
+        mCurrentListID = id;
+    }
+
+    public String getCurrentListID() {
+        return mCurrentListID;
     }
 }

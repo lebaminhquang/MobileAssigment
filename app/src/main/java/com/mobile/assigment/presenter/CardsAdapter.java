@@ -8,12 +8,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mobile.assigment.R;
+import com.mobile.assigment.UserInfo;
 import com.mobile.assigment.model.Card;
 import com.mobile.assigment.model.Interface.OnCardLoadedCallback;
 
 import java.util.ArrayList;
 
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardViewHolder> {
+    private String mListID;
     private ArrayList<String> mCardNameList;
     private ArrayList<String> mCardIDList;
     private Activity mParentActivity;
@@ -30,6 +32,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardViewHold
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     mCardClickedCallback.displayCardFragment(mCardNameList.get(position), mCardIDList.get(position));
+                    UserInfo.getInstance().setCurrentListID(mListID);
                     Card.getCard(mCardIDList.get(position), mCardLoadedCallback);
                 }
             });
@@ -55,6 +58,9 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardViewHold
         notifyItemChanged(mCardNameList.size() - 1);
     }
 
+    public void setListID(String ID) {
+        mListID = ID;
+    }
 
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

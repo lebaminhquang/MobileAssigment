@@ -52,6 +52,7 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
 
         public void setUpAdapter(OnCardClickedCallback cardClickedCallback, OnCardLoadedCallback cardLoadedCallback) {
             mAdapter = new CardsAdapter(cardClickedCallback, cardLoadedCallback);
+            mAdapter.setListID(mListCardIDLst.get(getAdapterPosition()));
             mCardsRecyclerView.setAdapter(mAdapter);
             mAdapter.setParentActivity(mParentActivity);
         }
