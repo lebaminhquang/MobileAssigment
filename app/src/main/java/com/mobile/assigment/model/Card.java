@@ -10,6 +10,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.mobile.assigment.UserInfo;
 import com.mobile.assigment.model.Interface.OnCardLoadedCallback;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class Card {
     private ArrayList<String> labelColors;
     private ArrayList<Boolean> labelChecked;
     private Map<String,Comment> commentList=new HashMap<>();
-    private Map<String,CheckList> checkListList = new HashMap<>();
+    private ArrayList<String> mChecklist = new ArrayList<>();
 
     private static DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Cards");
 
@@ -112,14 +113,6 @@ public class Card {
         this.commentList = commentList;
     }
 
-    public Map<String, CheckList> getCheckListList() {
-        return checkListList;
-    }
-
-    public void setCheckListList(Map<String, CheckList> checkListList) {
-        this.checkListList = checkListList;
-    }
-
     public static String createCard(Card card, String listID)
     {
         String key = reference.push().getKey();
@@ -158,5 +151,13 @@ public class Card {
     {
         DatabaseReference cardReference = reference.child(listID).child("cardList");
         cardReference.child(cardID).removeValue();
+    }
+
+    public void setChecklist(ArrayList<String> checklist) {
+        mChecklist = checklist;
+    }
+
+    public ArrayList<String> getChecklist() {
+        return mChecklist;
     }
 }

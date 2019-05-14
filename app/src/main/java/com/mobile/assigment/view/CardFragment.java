@@ -8,10 +8,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -27,6 +26,7 @@ import com.mobile.assigment.BoardDisplayActivity;
 import com.mobile.assigment.R;
 import com.mobile.assigment.UserInfo;
 import com.mobile.assigment.model.Card;
+import com.mobile.assigment.presenter.CardChecklistAdapter;
 import com.mobile.assigment.presenter.CardLabelAdapter;
 
 import java.util.ArrayList;
@@ -56,7 +56,14 @@ public class CardFragment extends Fragment {
     String mCardID;
 
     RecyclerView mCardLabelsRecyclerView;
+    RecyclerView mCardChecklistRecyclerView;
     CardLabelAdapter mCardLabelsAdapter;
+    CardChecklistAdapter mCardChecklistAdapter;
+    ImageView mOpenChecklistBtn;
+    EditText mAddChecklistItemEdt;
+    ImageView mAddChecklistBtn;
+    Boolean mIsChecklistOpened;
+    LinearLayout mCheckListContentLayout;
 
     @Nullable
     @Override
@@ -68,14 +75,20 @@ public class CardFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mCardLabelLayout = view.findViewById(R.id.card_label);
+        mOpenChecklistBtn = view.findViewById(R.id.open_close_checklist);
         mCardDescriptionEdt = view.findViewById(R.id.card_description_edt);
         mCardMemberLayout = view.findViewById(R.id.card_members);
         mCardDueDateLayout = view.findViewById(R.id.card_due_date);
         mCardChecklistLayout = view.findViewById(R.id.card_checklist);
+        mCheckListContentLayout = view.findViewById(R.id.card_checklist_content_layout);
         mCardLabelTxtView = view.findViewById(R.id.card_label_txt);
         mCardDueDateTimeTextView = view.findViewById(R.id.card_due_date_time_txt);
+        mAddChecklistBtn = view.findViewById(R.id.add_checklist_item_btn);
+        mAddChecklistItemEdt = view.findViewById(R.id.add_checklist_item_edittext);
+        mIsChecklistOpened = false;
 
         setUpCardLabelRecyclerView();
+        setUpCardChecklist();
 
         //setting up onclicklisteners
         mCardLabelLayout.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +136,7 @@ public class CardFragment extends Fragment {
         card.setLabelNames(mCardLabelsAdapter.getLabelNames());
         card.setLabelChecked(mCardLabelsAdapter.getLabelsChecked());
         card.setLabelColors(mCardLabelsAdapter.getLabelColors());
+        card.setChecklist(mCardChecklistAdapter.getChecklistData());
         UserInfo.getInstance().setCurrentCard(card);
         Card.updateCard(card);
     }
@@ -145,6 +159,43 @@ public class CardFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mCardLabelsRecyclerView.setLayoutManager(layoutManager);
         mCardLabelsRecyclerView.setAdapter(mCardLabelsAdapter);
+    }
+
+    public void setUpCardChecklist() {
+        //set up recycler view
+        mCardChecklistRecyclerView = getActivity().findViewById(R.id.card_checklist_recycler_view);
+        mCardChecklistAdapter = new CardChecklistAdapter();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mCardChecklistRecyclerView.setLayoutManager(layoutManager);
+        mCardChecklistRecyclerView.setAdapter(mCardChecklistAdapter);
+
+        //set up open btn
+        mOpenChecklistBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mIsChecklistOpened) {
+                    mIsChecklistOpened = true;
+                    mCheckListContentLayout.setVisibility(View.VISIBLE);
+                    mOpenChecklistBtn.setBackgroundResource(R.drawable.ic_close_checklist);
+                } else {
+                    mIsChecklistOpened = false;
+                    mCheckListContentLayout.setVisibility(View.GONE);
+                    mOpenChecklistBtn.setBackgroundResource(R.drawable.ic_open_checklist);
+                }
+            }
+        });
+
+        //set up adding checklist item
+        mAddChecklistBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String itemName = mAddChecklistItemEdt.getText().toString();
+                if (!TextUtils.isEmpty(itemName)) {
+                    mCardChecklistAdapter.addItem(itemName);
+                    mAddChecklistItemEdt.setText("");
+                }
+            }
+        });
     }
 
     public void setUp(Activity parentActivity) {
@@ -261,5 +312,6 @@ public class CardFragment extends Fragment {
         mCardName = card.getName();
         mCardID = card.getCardID();
         mCardLabelsAdapter.setData(card.getLabelNames(), card.getLabelColors(), card.getLabelChecked());
+        mCardChecklistAdapter.setData(card.getChecklist());
     }
 }

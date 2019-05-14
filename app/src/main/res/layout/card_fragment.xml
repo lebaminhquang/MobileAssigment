@@ -160,31 +160,85 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/card_checklist_shape"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:padding="15dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/card_checklist_icon_shape"
-                    android:gravity="center"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:background="@drawable/ic_card_checklist" />
-                </LinearLayout>
-
-                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:hint="Checklist..."
-                    android:textSize="16sp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/card_checklist_icon_shape"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/ic_card_checklist" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:hint="Checklist..."
+                        android:textSize="16sp"
+                        android:layout_weight="1"/>
+
+                    <ImageView
+                        android:id="@+id/open_close_checklist"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/ic_open_checklist"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/card_checklist_content_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone">
+                    
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/card_checklist_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:scrollbars="none">
+                    </android.support.v7.widget.RecyclerView>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:padding="5dp"
+                        android:background="@drawable/checklist_item_edittext_shape"
+                        android:elevation="5dp">
+                        <EditText
+                            android:id="@+id/add_checklist_item_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Add item ..."
+                            android:layout_weight="1"/>
+                        <ImageView
+                            android:id="@+id/add_checklist_item_btn"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/ic_add_checkbox_item_check"/>
+                    </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
 
