@@ -18,7 +18,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
         <LinearLayout
             android:id="@+id/item_card_due_date_layout"
             android:layout_width="wrap_content"
@@ -40,6 +41,24 @@
                 android:text="Due date"
                 android:textColor="#FFF"
                 android:padding="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_card_description_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_card_description" />
         </LinearLayout>
 
         <LinearLayout

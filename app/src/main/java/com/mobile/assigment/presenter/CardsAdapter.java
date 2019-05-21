@@ -28,6 +28,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardViewHold
         public TextView mCardChecklistProgress;
         public LinearLayout mDueDateLayout;
         public LinearLayout mChecklistLayout;
+        public LinearLayout mDescriptionLayout;
         public CardViewHolder(View v) {
             super(v);
             mCardName = v.findViewById(R.id.item_card_name_txt);
@@ -35,6 +36,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardViewHold
             mCardChecklistProgress = v.findViewById(R.id.item_card_checklist_txt);
             mDueDateLayout = v.findViewById(R.id.item_card_due_date_layout);
             mChecklistLayout = v.findViewById(R.id.item_card_checklist_layout);
+            mDescriptionLayout = v.findViewById(R.id.item_card_description_layout);
             this.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -71,6 +73,10 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardViewHold
             String progressText = numberOfCompletedTasks + "/" + numberOfTasks;
             holder.mCardChecklistProgress.setText(progressText);
             holder.mChecklistLayout.setVisibility(View.VISIBLE);
+        }
+
+        if (!TextUtils.isEmpty(currentCard.getDescription())) {
+            holder.mDescriptionLayout.setVisibility(View.VISIBLE);
         }
     }
 
