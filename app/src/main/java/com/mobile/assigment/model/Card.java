@@ -8,9 +8,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mobile.assigment.UserInfo;
-import com.mobile.assigment.model.Interface.OnCardLoadedCallback;
+import com.mobile.assigment.model.Interface.OnCardLoadedForFragmentCallback;
+import com.mobile.assigment.model.Interface.OnCardLoadedForListCallback;
+import com.mobile.assigment.presenter.ListCardAdapter;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -132,12 +133,27 @@ public class Card {
         listReference.child("cardList").child(card.getCardID()).setValue(card.getName());
     }
 
-    public static void getCard(String cardID, final OnCardLoadedCallback callback) {
+    public static void getCardForList(final ListCardAdapter.ListCardViewHolder holder, String cardID, final OnCardLoadedForListCallback callback) {
         reference.child(cardID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Card card = dataSnapshot.getValue(Card.class);
-                callback.onCardLoaded(card);
+                callback.onCardLoadedForList(holder, card);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getCardForFragment(String cardID, final OnCardLoadedForFragmentCallback callback) {
+        reference.child(cardID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Card card = dataSnapshot.getValue(Card.class);
+                callback.onCardLoadedForFragment(card);
             }
 
             @Override

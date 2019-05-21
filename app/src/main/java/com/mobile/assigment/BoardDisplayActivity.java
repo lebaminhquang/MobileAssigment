@@ -30,7 +30,7 @@ import android.widget.LinearLayout;
 
 import com.mobile.assigment.model.Board;
 import com.mobile.assigment.model.Card;
-import com.mobile.assigment.model.Interface.OnCardLoadedCallback;
+import com.mobile.assigment.model.Interface.OnCardLoadedForFragmentCallback;
 import com.mobile.assigment.model.Interface.OnCardsInListReceivedCallback;
 import com.mobile.assigment.model.Interface.OnListsInBoardReceived;
 import com.mobile.assigment.model.ListCard;
@@ -43,11 +43,11 @@ import com.mobile.assigment.view.CardFragment;
 import java.util.Map;
 
 public class BoardDisplayActivity extends AppCompatActivity implements OnCardClickedCallback,
-        OnListsInBoardReceived, OnCardsInListReceivedCallback, OnCardLoadedCallback {
+        OnListsInBoardReceived, OnCardsInListReceivedCallback, OnCardLoadedForFragmentCallback {
     private static String EXTRA_MESSAGE = "com.mobile.assignment";
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mListCardRecyclerView;
-    private ListCardAdapter mAdapter;
+    private ListCardAdapter mListCardAdapter;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private Toolbar mToolbar;
@@ -63,7 +63,6 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
     private AppBarLayout mAppBarLayout;
     private AlertDialog mAddListDialog;
     private EditText mNewListNameEditText;
-
     private Boolean mIsInCardFragment;
 
     @Override
@@ -171,12 +170,11 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
         mListCardRecyclerView.setLayoutManager(mLayoutManager);
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(mListCardRecyclerView);
-        mAdapter = new ListCardAdapter(this, this);
-        mAdapter.setParentActivity(BoardDisplayActivity.this);
-        mAdapter.setUpAddCardDialogBox();
-        mListCardRecyclerView.setAdapter(mAdapter);
+        mListCardAdapter = new ListCardAdapter(this, this);
+        mListCardAdapter.setParentActivity(BoardDisplayActivity.this);
+        mListCardAdapter.setUpAddCardDialogBox();
+        mListCardRecyclerView.setAdapter(mListCardAdapter);
     }
-
 
     public void switchToAnotherFragment(Fragment fragment, CharSequence fragmentName) {
         //hide the menu
@@ -202,7 +200,7 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
                     public void onClick(DialogInterface dialog, int which) {
                         String newListName = mNewListNameEditText.getText().toString();
                         String newListID = pushNewListCardToDatabase(newListName);
-                        mAdapter.addList(newListName, newListID);
+                        mListCardAdapter.addList(newListName, newListID);
                         mNewListNameEditText.setText("");
                     }
                 })
@@ -262,7 +260,7 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
     public void onReceiveLists(Map<String, String> lists) {
         //add list
         for (Map.Entry<String, String> list: lists.entrySet()) {
-            int position = mAdapter.addList(list.getValue(), list.getKey());
+            int position = mListCardAdapter.addList(list.getValue(), list.getKey());
             //get the cards
             ListCard.getAllCardsInList(list.getKey(), position, this);
         }
@@ -272,12 +270,13 @@ public class BoardDisplayActivity extends AppCompatActivity implements OnCardCli
     public void onCardsInListReceived(int position, Map<String, String> cards) {
         RecyclerView.ViewHolder holder = mListCardRecyclerView.findViewHolderForAdapterPosition(position);
         for (Map.Entry<String, String> card: cards.entrySet()) {
-            mAdapter.addCardToList((ListCardAdapter.ListCardViewHolder) holder, position, card.getValue(), card.getKey());
+            Card.getCardForList((ListCardAdapter.ListCardViewHolder) holder, card.getKey(), mListCardAdapter);
         }
     }
 
     @Override
-    public void onCardLoaded(Card card) {
+    public void onCardLoadedForFragment(Card card) {
+        UserInfo.getInstance().setCurrentCard(card);
         mCardFragment.loadCardData(card);
     }
 

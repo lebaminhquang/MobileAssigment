@@ -28,6 +28,7 @@ import com.mobile.assigment.UserInfo;
 import com.mobile.assigment.model.Card;
 import com.mobile.assigment.presenter.CardChecklistAdapter;
 import com.mobile.assigment.presenter.CardLabelAdapter;
+import com.mobile.assigment.presenter.CardsAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -138,6 +139,7 @@ public class CardFragment extends Fragment {
         card.setLabelColors(mCardLabelsAdapter.getLabelColors());
         card.setChecklist(mCardChecklistAdapter.getChecklistData());
         UserInfo.getInstance().setCurrentCard(card);
+        UserInfo.getInstance().getCurrentCardsAdapter().onCardSaved(card);
         Card.updateCard(card);
     }
 

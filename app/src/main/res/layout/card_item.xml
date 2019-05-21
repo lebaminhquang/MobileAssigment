@@ -12,6 +12,57 @@
         android:id="@+id/item_card_name_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18dp"/>
+        android:textSize="18dp"
+        android:layout_marginBottom="5dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/item_card_due_date_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_due_date_display_tag"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_clock" />
+            <TextView
+                android:id="@+id/item_card_due_date_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Due date"
+                android:textColor="#FFF"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_card_checklist_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_check_box_display_tag" />
+            <TextView
+                android:id="@+id/item_card_checklist_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="progress"
+                android:padding="5dp"/>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

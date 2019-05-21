@@ -13,19 +13,19 @@ import android.widget.TextView;
 
 import com.mobile.assigment.R;
 import com.mobile.assigment.model.Card;
-import com.mobile.assigment.model.Interface.OnCardLoadedCallback;
+import com.mobile.assigment.model.Interface.OnCardLoadedForFragmentCallback;
+import com.mobile.assigment.model.Interface.OnCardLoadedForListCallback;
 
 import java.util.ArrayList;
 
 import at.markushi.ui.CircleButton;
 
-public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCardViewHolder> {
+public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCardViewHolder> implements OnCardLoadedForListCallback{
     private ArrayList<String> mListCardNameLst;
     private ArrayList<String> mListCardIDLst;
     private Activity mParentActivity;
-    private ArrayList<ArrayList<String>> mCardsData;
     private OnCardClickedCallback mCardClickedCallback;
-    private OnCardLoadedCallback mCardLoadedCallback;
+    private OnCardLoadedForFragmentCallback mCardLoadedCallback;
     private AlertDialog mAddCardDialog;
     private EditText mNewCardNameTxt;
 
@@ -50,22 +50,16 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
             mCardsRecyclerView.setLayoutManager(mLayoutManager);
         }
 
-        public void setUpAdapter(OnCardClickedCallback cardClickedCallback, OnCardLoadedCallback cardLoadedCallback) {
+        public void setUpAdapter(OnCardClickedCallback cardClickedCallback, OnCardLoadedForFragmentCallback cardLoadedCallback) {
             mAdapter = new CardsAdapter(cardClickedCallback, cardLoadedCallback);
             mAdapter.setListID(mListCardIDLst.get(getAdapterPosition()));
             mCardsRecyclerView.setAdapter(mAdapter);
-            mAdapter.setParentActivity(mParentActivity);
         }
     }
 
-    public ListCardAdapter(OnCardClickedCallback cardClickedCallback, OnCardLoadedCallback cardLoadedCallback) {
+    public ListCardAdapter(OnCardClickedCallback cardClickedCallback, OnCardLoadedForFragmentCallback cardLoadedCallback) {
         mListCardNameLst = new ArrayList<>();
         mListCardIDLst = new ArrayList<>();
-        mCardsData = new ArrayList<>();
-        //TODO: for now, we initialize an empty list of card names, in the future, load from database
-        for (int i = 0; i < mListCardNameLst.size(); i++) {
-            mCardsData.add(new ArrayList<String>());
-        }
 
         mCardClickedCallback = cardClickedCallback;
         mCardLoadedCallback = cardLoadedCallback;
@@ -89,8 +83,7 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
                         int pos = mCurrentList.getAdapterPosition();
                         String newCardName = mNewCardNameTxt.getText().toString();
                         String newCardId = pushNewCardToDatabase(newCardName, pos);
-                        mCardsData.get(pos).add(mNewCardNameTxt.getText().toString());
-                        mCurrentList.mAdapter.addCard(newCardName, newCardId);
+                        mCurrentList.mAdapter.addNewCard(newCardName, newCardId);
                         mNewCardNameTxt.setText("");
                     }
                 })
@@ -141,7 +134,6 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
     public int addList(String listName, String listID) {
         mListCardNameLst.add(listName);
         mListCardIDLst.add(listID);
-        mCardsData.add(new ArrayList<String>());
         notifyItemChanged(mListCardNameLst.size() - 1);
         return mListCardIDLst.size() - 1;
     }
@@ -165,7 +157,11 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ListCa
     }
 
     public void addCardToList(ListCardViewHolder holder, int position, String cardName, String cardID) {
-        mCardsData.get(position).add(cardName);
-        holder.mAdapter.addCard(cardName, cardID);
+        holder.mAdapter.addNewCard(cardName, cardID);
+    }
+
+    @Override
+    public void onCardLoadedForList(ListCardAdapter.ListCardViewHolder holder, Card card) {
+        holder.mAdapter.loadCardFromDatabase(card);
     }
 }

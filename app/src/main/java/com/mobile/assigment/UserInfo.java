@@ -2,6 +2,7 @@ package com.mobile.assigment;
 
 import com.mobile.assigment.model.Board;
 import com.mobile.assigment.model.Card;
+import com.mobile.assigment.presenter.CardsAdapter;
 
 public class UserInfo {
     private String mName;
@@ -11,7 +12,8 @@ public class UserInfo {
     private static UserInfo mInstance;
     private String mCurrentListID;
     private Card mCurrentCard;
-
+    private CardsAdapter mCurrentCardsAdapter;
+    private int mCurrentCardPosition;
     private UserInfo() {
 
     }
@@ -69,5 +71,21 @@ public class UserInfo {
 
     public String getCurrentListID() {
         return mCurrentListID;
+    }
+
+    public CardsAdapter getCurrentCardsAdapter() {
+        return mCurrentCardsAdapter;
+    }
+
+    public void setCurrentCardsAdapter(CardsAdapter currentCardsAdapter) {
+        this.mCurrentCardsAdapter = currentCardsAdapter;
+    }
+
+    public void setCurrentCardPosition(int currentCardPosition) {
+        this.mCurrentCardPosition = currentCardPosition;
+    }
+
+    public int getCurrentCardPosition() {
+        return mCurrentCardPosition;
     }
 }
